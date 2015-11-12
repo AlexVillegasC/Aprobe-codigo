@@ -1,0 +1,16 @@
+html{
+	box-sizing: border-box;
+}
+
+*, *:before, *:after{
+	box-sizing: inherit;
+}
+
+.navbar-black{
+	background: #2c3e50;
+	color: white;
+	border: none;
+}
+.text1{
+	color: white;
+}

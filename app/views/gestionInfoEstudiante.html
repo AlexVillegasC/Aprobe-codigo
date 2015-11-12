@@ -1,0 +1,145 @@
+
+    <!-- Add your site or application content here -->
+    <div class="header">
+      <div class="navbar navbar-default navbar-black" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand" href="#/" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'">APROBE</a>
+          </div>
+
+          <div class="collapse navbar-collapse" id="js-navbar-collapse">
+
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+              <li><a ng-href="#/" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'">Gestion de estudiantes
+              </a></li>
+              <li><a ng-href="#/" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'">Bitacora</a></li>
+              <li><a ng-href="#/" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'">Informacion estudiantil
+              </a></li>
+               <li class="dropdown">
+                            <a id="drop2" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'">Login
+                <span class="caret"></span>
+                            </a>
+                            <ul id="loginPanel" style="background: rgb(52, 152, 219);" class="dropdown-menu" onclick="Stop(event);" aria-labelledby="drop2">
+                                <li>
+                                    <div class="container-fluid" style="width: 243px;">
+                                        <div class="form-group">
+                                            <br>
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                                <input onblur="checkEmpty(this);" type="text" id="usuarioTB" class="form-control chat-input errorField" placeholder="Usuario">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                                <input onblur="checkEmpty(this);" type="password" id="passwordTB" class="form-control chat-input errorField" placeholder="Password">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+
+                                            <div class="checkbox checkbox-info">
+                                                <input id="rememberCB" class="styled" type="checkbox">
+                                                <label for="rememberCB">
+                                                    Recordarme
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <button type="button" onclick="loginValidation();" class="btn btn-primary">Login</button>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <label id="errorLB" class="control-label" style="display:none; color: red; font-family: serif; font-size: x-small;">Usuario o Password incorrecto</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div></li>
+                            </ul>
+                            </li>   
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--
+    cuadros de texto para busqueda
+    -->
+    <form class="form-inline">
+      <div class="form-group">
+        <label class="sr-only" for="cedulaAP">Cedula</label>
+        <input type="text" class="form-control" id="cedulaAP" placeholder="Cedula">
+      </div>
+          <div class="form-group">
+            <label class="sr-only" for="1erApeAP">1er apellido</label>
+            <input type="text" class="form-control" id="1erApeAP" placeholder="1er apellido">
+          </div>
+              <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+  
+    </form>
+
+    <table class="table table-hover">
+  <thead>
+  <tr>
+     <th>Nombre</th>
+     <th>1er Apellido</th>
+     <th>2do Apellido</th>
+     <th>Cedula</th>
+     <th>condicion socioeconomico</th>
+     <th>Estado solicitud</th>
+     <tbody>
+     <tr>
+      <td>Alex</td>
+      <td>Villegas</td>
+      <td>Carranza</td>
+      <td>416546</td>
+      <td>vulnerable</td>
+      <td>NA</td>
+     </tr>  
+     <tr>
+      <td>Esteban</td>
+      <td>castro</td>
+      <td>cordero</td>
+      <td>115810936</td>
+      <td>pobreza extrema</td>
+      <td>A</td>
+     </tr>
+     </tbody>
+  </tr>
+  </thead>
+  </table>
+
+   <!-- <div class="container">
+    <div ng-view=""></div>
+    </div>
+
+    <div class="footer">
+      <div class="container">
+        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+      </div>
+    </div>
+
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+     <script>
+       !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
+       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
+       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
+       }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+       ga('create', 'UA-XXXXX-X');
+       ga('send', 'pageview');
+    </script>
