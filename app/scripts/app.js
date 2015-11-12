@@ -2,16 +2,16 @@
 // Declare app level module which depends on filters, and services
 var app = angular.module('myApp', ['ngRoute']);
 app.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/home',{
+	$routeProvider.when('/homeAdmin',{
 		templateUrl:'views/home.html',
 		controller: 'loginAdminCtrl'
 	});
 	$routeProvider.when('/',{
-		templateUrl:'views/home.html',
+		templateUrl:'views/homeAdmin.html',
 		controller: 'loginAdminCtrl'
 	});
-	$routeProvider.when('/homeAdmin',{
-		templateUrl:'views/homeAdmin.html',
+	$routeProvider.when('/home',{
+		templateUrl:'views/home.html',
 		controller: 'loginAdminCtrl'
 	});
 	$routeProvider.when('/gestionInfoEstudiante',{
