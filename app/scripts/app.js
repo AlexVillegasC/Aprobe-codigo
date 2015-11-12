@@ -10,6 +10,10 @@ app.config(['$routeProvider', function($routeProvider) {
 		templateUrl:'views/home.html',
 		controller: 'loginAdminCtrl'
 	});
+	$routeProvider.when('/homeAdmin',{
+		templateUrl:'views/homeAdmin.html',
+		controller: 'loginAdminCtrl'
+	});
 	$routeProvider.when('/gestionInfoEstudiante',{
 		templateUrl: 'views/gestionInfoEstudiante.html',
 		controller: 'homeCtrl'
@@ -20,7 +24,7 @@ app.config(['$routeProvider', function($routeProvider) {
 
 //Remove access to home page without autentication
 app.run(function($rootScope,$location,loginService,sessionService){
-	var routespermission=['/gestionInfoEstudiante']; //Route that require login
+	var routespermission=['/gestionInfoEstudiante','/homeAdmin']; //Route that require login
 
 	console.log("If there's coincidences with the routes: "+routespermission.indexOf($location.path()));
 	console.log("Is logged?: "+loginService.islogged());
