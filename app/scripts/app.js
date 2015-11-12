@@ -2,11 +2,15 @@
 // Declare app level module which depends on filters, and services
 var app = angular.module('myApp', ['ngRoute']);
 app.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/home',{
+	$routeProvider.when('/homeAdmin',{
 		templateUrl:'views/home.html',
 		controller: 'loginAdminCtrl'
 	});
 	$routeProvider.when('/',{
+		templateUrl:'views/homeAdmin.html',
+		controller: 'loginAdminCtrl'
+	});
+	$routeProvider.when('/home',{
 		templateUrl:'views/home.html',
 		controller: 'loginAdminCtrl'
 	});
@@ -20,7 +24,7 @@ app.config(['$routeProvider', function($routeProvider) {
 
 //Remove access to home page without autentication
 app.run(function($rootScope,$location,loginService,sessionService){
-	var routespermission=['/gestionInfoEstudiante']; //Route that require login
+	var routespermission=['/gestionInfoEstudiante','/homeAdmin']; //Route that require login
 
 	console.log("If there's coincidences with the routes: "+routespermission.indexOf($location.path()));
 	console.log("Is logged?: "+loginService.islogged());
