@@ -3,10 +3,10 @@
 var app = angular.module('myApp', ['ngRoute']);
 app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/homeAdmin',{
-		templateUrl:'views/home.html',
+		templateUrl:'views/homeAdmin.html',
 		controller: 'loginAdminCtrl'
 	});
-	$routeProvider.when('/',{
+	$routeProvider.when('/home',{
 		templateUrl:'views/homeAdmin.html',
 		controller: 'loginAdminCtrl'
 	});
@@ -16,7 +16,7 @@ app.config(['$routeProvider', function($routeProvider) {
 	});
 	$routeProvider.when('/gestionInfoEstudiante',{
 		templateUrl: 'views/gestionInfoEstudiante.html',
-		controller: 'homeCtrl'
+		controller: 'gestionInfoEstCtrl'
 	});
 	$routeProvider.otherwise({redirectTo:'/home'});
 }]);
@@ -24,7 +24,7 @@ app.config(['$routeProvider', function($routeProvider) {
 
 //Remove access to home page without autentication
 app.run(function($rootScope,$location,loginService,sessionService){
-	var routespermission=['/gestionInfoEstudiante','/homeAdmin']; //Route that require login
+	var routespermission=['/homeAdmin','/gestionInfoEstudiante']; //Route that require login
 
 	console.log("If there's coincidences with the routes: "+routespermission.indexOf($location.path()));
 	console.log("Is logged?: "+loginService.islogged());

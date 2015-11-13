@@ -13,6 +13,26 @@
 			$this->result="";
 		}
 
+		//inserta los datos del estudiante, en su primer matricula
+		function crear_matriculaEst($clave,$sex,$becaE,$edadE,$codNacional,$ap1,$ap2,$nombre,$telef,
+			$cedEst,$fecha_n,$numNiv){
+			// Cuerpo de la función
+			$EncripClave = password_hash('1994-08-13', PASSWORD_BCRYPT);
+			$this->query = "CALL sp_crearRegistrosEstudiantePorMatricula('$clave',$sex,NULL,$edadE,$codNacional,
+			'$ap1','$ap2','$nombre',$telef,'$cedEst',$fecha_n,$numNiv)";
+		
+	//	$this->query = "CALL sp_crearMiembrosfamilia  ('$cedEst','$nombre','$ap1','ap2',$codNacional,$edadE,1,NULL,4,$sex);";
+    //  $this->query  = "CALL sp_crearGrupofamiliarPorNuevaMatricula ($telef,'$cedEst')";
+	//$this->query = "CALL sp_SET_MiembroFam_GrupoFamiliar('$cedEst','$cedEst')";
+//	$this->query = "INSERT into logestudiante VALUES('$cedEst','$EncripClave')";	
+			$this->result = mysqli_query($this->con,$this->query);
+			if($this->result === FALSE){
+				trigger_error('Query failed returning error: '.mysql_error(),E_USER_ERROR);
+			} else {
+				return true;
+			}
+		}
+
 		//inserta un administrador en la base de datos
 		function crear_Admin($ced,$pass){
 			$pass_hash =  password_hash($pass, PASSWORD_BCRYPT);//Encripta el password
