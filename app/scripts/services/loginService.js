@@ -2,14 +2,14 @@
 app.factory('loginService',function($http,$location	,sessionService){
 	return {
 		login: function(data,scope){
-			var promise = $http.post('data/user.php',data);
+			var promise = $http.post('data/Sesiones/user.php',data);
 			promise.then(function(msg){
 				var uid = msg.data;
 				if(uid.length > 10) 
 				{   //Success
 					console.log(uid);
 					sessionService.set('user',uid);//key and value are the user object and the unique ID
-					$location.path('/home');
+					$location.path('/homeAdmin');
 				}
 				else 
 				{
@@ -25,7 +25,7 @@ app.factory('loginService',function($http,$location	,sessionService){
 		},
 		islogged:function(){
 			//if(sessionService.get('user')) return 'authentified';
-			var $checkSessionServer = $http.post('data/check_session.php');
+			var $checkSessionServer = $http.post('data/Sesiones/check_session.php');
 			return $checkSessionServer;
 		}
 	

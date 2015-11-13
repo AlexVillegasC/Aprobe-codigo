@@ -13,7 +13,7 @@
 DROP PROCEDURE IF EXISTS ActualizarAdmin_sp;
 
 DELIMITER $$
-CREATE PROCEDURE ActualizarAdmin_sp(IN ced VARCHAR(20), IN clav VARCHAR(20))
+CREATE PROCEDURE ActualizarAdmin_sp(IN ced VARCHAR(20), IN clav VARCHAR(200))
 	BEGIN
 		UPDATE `logadmin`
 		SET logadmin.`clave` = clav
@@ -29,7 +29,7 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS CrearComiteBecas_sp;
 DELIMITER $$
 
-CREATE PROCEDURE CrearComiteBecas_sp(IN ced VARCHAR(20),IN clav VARCHAR(20))
+CREATE PROCEDURE CrearComiteBecas_sp(IN ced VARCHAR(20),IN clav VARCHAR(200))
 	BEGIN 
 	   INSERT INTO logcomitebecas (`cedula`,`clave`) VALUES(ced,clav);  
 	END; $$
@@ -39,7 +39,7 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS ActualizarComiteBecas;
 
 DELIMITER $$
-CREATE PROCEDURE ActualizarComiteBecas(IN ced VARCHAR(20), IN clav VARCHAR(20))
+CREATE PROCEDURE ActualizarComiteBecas(IN ced VARCHAR(20), IN clav VARCHAR(200))
 	BEGIN
 		UPDATE logestudiante
 		SET logestudiante.`clave` = clav;
@@ -57,7 +57,7 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS sp_crearLogEstudiante;
 
 DELIMITER $$
-CREATE PROCEDURE sp_crearLogEstudiante(IN ced VARCHAR(20), IN pass VARCHAR(20))
+CREATE PROCEDURE sp_crearLogEstudiante(IN ced VARCHAR(20), IN pass VARCHAR(200))
 	BEGIN
 		INSERT INTO logestudiante (logestudiante.`cedula`,logestudiante.`clave`)
 		SELECT * FROM (SELECT ced,pass) AS tmp
@@ -75,7 +75,7 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS sp_actualizarLogEstudiante;
 
 DELIMITER $$
-CREATE PROCEDURE sp_actualizarLogEstudiante(IN ced VARCHAR(20), IN pass VARCHAR(20))
+CREATE PROCEDURE sp_actualizarLogEstudiante(IN ced VARCHAR(20), IN pass VARCHAR(200))
 	BEGIN
 		UPDATE logestudiante 
 		SET logestudiante.`cedula` = ced, logestudiante.`clave` = pass;
@@ -124,7 +124,7 @@ DELIMITER ;
 
 
 /*DELETE*/
-
+/*
 DROP PROCEDURE IF EXISTS sp_borrarEstudiante;
 
 DELIMITER $$
@@ -134,7 +134,37 @@ CREATE PROCEDURE sp_borrarEstudiante(IN ced VARCHAR(20) )
 		WHERE estudiantes.`cedula` = ced;
 	END; $$
 DELIMITER ;
+*/
+-- Borra un estudiante y todos sus registros en el sistema
+DROP PROCEDURE IF EXISTS sp_borrarEstudiante;
+DELIMITER $$
+CREATE PROCEDURE sp_borrarEstudiante(IN ced VARCHAR(20))
+	BEGIN
+		DELETE 
+		FROM estudiantes
+		WHERE estudiantes.`cedula` = `ced`;
+		DELETE
+		FROM `logestudiante`
+		WHERE   logestudiante.`cedula` = ced;
+		DELETE
+		FROM `miembrosfamilia`
+		WHERE  `miembrosfamilia`.`cedula` = ced;
+	END; $$
+DELIMITER ;
 
+-- Borra TODOS LOS REGISTROS DE ESTDIANTES NO USAR, SOLO PARA PRUEBAS
+DROP PROCEDURE IF EXISTS sp_borrarTODOSEstudiante;
+DELIMITER $$
+CREATE PROCEDURE sp_borrarTODOSEstudiante()
+	BEGIN
+		DELETE 
+		FROM estudiantes;
+		DELETE
+		FROM `logestudiante`;
+		DELETE
+		FROM `miembrosfamilia`;
+	END; $$
+DELIMITER ;
 
 
 /*MiembroFamilia CRUD*/
@@ -246,10 +276,16 @@ CREATE PROCEDURE sp_SET_MiembroFam_GrupoFamiliar(IN cedEst VARCHAR(20),IN cedMie
 DELIMITER ;
 
 
+
+-- Ejemplo quemado de sp_crearRegistrosEstudiantePorMatricula
+/*
+CALL `sp_crearRegistrosEstudiantePorMatricula`(1,NULL,19,1,'Villegas','Carranza','Alex Daniel',85283060,'503990937'
+,'1994-08-13',12)
+*/
 DROP PROCEDURE IF EXISTS sp_crearRegistrosEstudiantePorMatricula;
 
 DELIMITER $$
-CREATE PROCEDURE sp_crearRegistrosEstudiantePorMatricula(IN sex INT(11),IN becaE TINYINT(1),IN edadE INT(2),IN codNacional INT (11) ,IN ap1 VARCHAR(40),IN ap2 VARCHAR(40),IN nombre VARCHAR (40),IN telef INT(11), IN cedEst VARCHAR(20),IN fecha_n DATETIME, IN numNiv INT (11) )
+CREATE PROCEDURE sp_crearRegistrosEstudiantePorMatricula(IN clave VARCHAR(200),IN sex INT(11),IN becaE TINYINT(1),IN edadE INT(2),IN codNacional INT (11) ,IN ap1 VARCHAR(40),IN ap2 VARCHAR(40),IN nombre VARCHAR (40),IN telef INT(11), IN cedEst VARCHAR(20),IN fecha_n DATETIME, IN numNiv INT (11) )
 	BEGIN  
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
 		BEGIN
@@ -269,7 +305,7 @@ CREATE PROCEDURE sp_crearRegistrosEstudiantePorMatricula(IN sex INT(11),IN becaE
 			CALL sp_crearMiembrosfamilia  (cedEst,nombre,ap1,ap2,codNacional,edadE,1,becaE,4,sex);
 			CALL sp_crearGrupofamiliarPorNuevaMatricula (telef,cedEst);
 			CALL sp_SET_MiembroFam_GrupoFamiliar(cedEst,cedEst);
-			CALL sp_crearLogEstudiante(cedEst,fecha_n);
+			CALL sp_crearLogEstudiante(cedEst,clave);
 		COMMIT;
 	END; $$
 DELIMITER ;

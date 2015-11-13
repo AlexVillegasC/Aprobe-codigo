@@ -9,7 +9,7 @@ app.factory('sessionService',function($http){
 		},
 		destroy: function(key){
 			//Go and destroy the session in the server
-			$http.post('data/destroy_session.php');
+			$http.post('data/Sesiones/destroy_session.php');
 			return sessionStorage.removeItem(key);
 		}
 	};
