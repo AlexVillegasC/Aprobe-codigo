@@ -1,5 +1,5 @@
 <?php 
-
+	// ESCRITURA del primer registro de estudiantes matriculas en el año. Solo debe usarse una vez por matricula
 	include('../dbAccess/CADusuario.php');
 	$cad = new CADusuario();
 
@@ -9,7 +9,7 @@
 
 	$n = count($listaEstudiantes['post']);
 	$resp = 0;
-	for($i = 0;  $i < $n; $i++){
+	for($i = 0;  $i < 5; $i++){
 		$estudiante = $listaEstudiantes['post'][$i];
 		//print_r($estudiante);
 		//print '<br>';
@@ -26,7 +26,7 @@
 		$fechaNac = $estudiante['fechaNac'];
 		$numNiv = $estudiante['numNivel'];
 		$clave = $estudiante['fechaNac'];
-		$resp += $cad->crear_matriculaEst($clave,$sexo,$beca,$edad,$codigo,$ap1,$ap2,
+		$resp = $cad->crear_matriculaEst($clave,$sexo,$beca,$edad,$codigo,$ap1,$ap2,
 		$nombre,$telef,$cedula,$fechaNac,$numNiv);
 		print $resp;
 

@@ -65,6 +65,25 @@
 		}
 
 
+
+		//Metodo para leer la lista de estudiantes matriculados
+		function leer_Matricula(){
+			$this->query = "SELECT * FROM ListaDeEstudiantes_vw";
+			$this->result = mysqli_query($this->con,$this->query);
+
+			if($this->result === FALSE){
+				trigger_error('Query failed returnin error: '.mysql_error(),E_USER_ERROR);
+			}
+			else{
+				$row;
+				$listaEstudiantes = array();
+				while($row = mysqli_fetch_assoc($this->result)){
+					array_push($listaEstudiantes,$row);
+				}
+				return json_encode($listaEstudiantes);
+			}
+		}
+
 	}
 
 ?>
