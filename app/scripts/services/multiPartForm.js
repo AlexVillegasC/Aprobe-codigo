@@ -1,11 +1,24 @@
 app.service('multipartForm',['$http',function($http){
-	this.post = function(data){
+	//promise
+    var listaEst = {};
+    listaEst.msj = {};
 
-		$http.post('data/GestionInfoEstudiantes/GestionInformacionEstudiante.php',data,{
-			//angular indentity to serialize, investigar!!	
+	listaEst.post = function(data){
 
-		}).then(function(res){
+		$http.post('data/GestionInfoEstudiantes/guardarMatricula.php',data)
+		.then(function(res){
 				console.log(res.data);
-			});
-	}
+		});
+		listaEst.msj = true;
+		return listaEst.msj;
+	};
+	listaEst.leerMatricula = function(){
+		$http.post('data/GestionInfoEstudiantes/leerMatricula.php')
+		.then(function(res){
+			listaEst.msj = res.data;
+			console.log(listaEst.msj.data);
+		});
+		return listaEst.msj;
+	};
+	return listaEst;
 }])

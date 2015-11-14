@@ -11,17 +11,18 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
             </button>
-                <a class="navbar-brand" ng-href="#/homeAdmin" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'" >APROBE</a>
+                <a class="navbar-brand" href="#/" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'" >APROBE</a>
           </div>
             <!--NAV-->
             <div class="collapse navbar-collapse" id="js-navbar-collapse">
               <ul class="nav navbar-nav">
-                  <li class="active"><a ng-href="#/homeAdmin"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+                  <li class="active"><a href="#/homeAdmin"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+                 
                   <li><a ng-href="#/" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'">Solicitudes de beca</a></li>
                   <li><a ng-href="#/gestionInfoEstudiante" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'">Estudiantes</a></li>
                   <li><a ng-href="#/" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'">Gestion de rutas</a></li>
-                  <li><a ng-href="#/" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'">Bitacora</a></li>
-                  <li><a  style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#7f8c8d'">   <login-Directive ></login-Directive>   </a></li>
+                  <li><a  style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#7f8c8d'"> 
+                  <login-Directive ></login-Directive> </a></li>
               </ul>
             </div>        
         </div>      
@@ -45,6 +46,7 @@
 
           <br>
           <br>
+           
 
           <div class="form-group">
             <input class="form-control" type="file" id="searchFile" 
@@ -53,38 +55,35 @@
             <button class="btn btn-primary"  id="btnSubirArchivo" ng-click="Submit()">
               <span class="glyphicon glyphicon-fire"></span>
             </button>
+            <br>
+            <br>
+
+             <div class="form-group">
+              <button type="submit" class="btn btn-primary" ng-click="mostrarEstudiantes()"><span>Refrescar</span></button>
+            </div>
           </div>
   
     </form>
 
-    <table class="table table-hover">
-  <thead>
-  <tr>
-     <th>Nombre</th>
-     <th>1er Apellido</th>
-     <th>2do Apellido</th>
-     <th>Cedula</th>
-     <th>condicion socioeconomico</th>
-     <th>Estado solicitud</th>
-     <tbody>
-     <tr>
-      <td>Alex</td>
-      <td>Villegas</td>
-      <td>Carranza</td>
-      <td>416546</td>
-      <td>vulnerable</td>
-      <td>NA</td>
-     </tr>  
-     <tr>
-      <td>Esteban</td>
-      <td>castro</td>
-      <td>cordero</td>
-      <td>115810936</td>
-      <td>pobreza extrema</td>
-      <td>A</td>
-     </tr>
-     </tbody>
-  </tr>
-  </thead>
+  <table class="table table-hover">
+    <thead>
+      <tr>  
+         <th>1er Apellido</th>
+         <th>2do Apellido</th>
+         <th>Nombre</th>
+         <th>Cedula</th>
+         <th>Nivel</th>
+         <th>Estado solicitud</th>
+      </tr> 
+    </thead>
+    <tbody>
+       <tr ng-repeat="estudiante in listaEst">
+          <td>{{estudiante.nombre}}</td>
+          <td>{{estudiante.primerApellido}}</td>
+          <td>{{estudiante.segundoApellido}}</td>
+          <td>{{estudiante.cedula}}</td>
+          <td>{{estudiante.numNivel}}</td>
+          <td>{{estudiante.tipoBeca}}</td>
+       </tr>  
+    </tbody>
   </table>
-

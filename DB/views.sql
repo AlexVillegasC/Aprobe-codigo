@@ -31,11 +31,18 @@ CREATE VIEW ExtraerListaMatriculados_vw
 
 --el usuario comite puede hacer una consulta extrallendo la siguiente info: nombre | ambos apellidos ordenados por los mismos | cedula | situacion eco. | 
 --estado de la solicitud
-
-create view ListaDeEstudiantes_vw
-			as (
-				SELECT miembrosfamilia.nombre, miembrosfamilia.primerApellido, miembrosfamilia.segundoApellido,
-				grupofamiliar.cedEstudiante, solicitudestudiante.estadoSolicitud, condicionse.idCondicion
-				FROM miembrosfamilia, estadoSolicitud, condicionse, grupofamiliar
-				where miembrosfamilia.cedula = grupofamiliar.cedEstudiante
-				and grupofamiliar.idFamilia = condicionse.idFamilia)
+-- LECTURA de la tabla solicitudestudiante debe hacerse 
+DROP VIEW IF EXISTS ListaDeEstudiantes_vw;
+CREATE VIEW ListaDeEstudiantes_vw
+			AS (
+				SELECT miembrosfamilia.nombre, 
+				miembrosfamilia.primerApellido, 
+				miembrosfamilia.segundoApellido,
+				miembrosfamilia.`cedula`,
+				`estudiantes`.`numNivel`,
+				solicitudestudiante.`tipoBeca`
+				FROM miembrosfamilia,`estudiantes`,solicitudestudiante
+				WHERE miembrosfamilia.`cedula` = `estudiantes`.`cedula`
+				AND `estudiantes`.`cedula` = `solicitudestudiante`.`cedula`
+				ORDER BY miembrosfamilia.`primerApellido` ASC
+			    );

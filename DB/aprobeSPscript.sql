@@ -275,11 +275,22 @@ CREATE PROCEDURE sp_SET_MiembroFam_GrupoFamiliar(IN cedEst VARCHAR(20),IN cedMie
 	END; $$
 DELIMITER ;
 
+-- Inserta la solicitud de beca del estudiante, que va por defecto recien entra la lista de matricula
+DROP PROCEDURE IF EXISTS sp_crearSolicitudEst;
+DELIMITER $$
+
+CREATE PROCEDURE sp_crearSolicitudEst(IN cedula VARCHAR(20))
+BEGIN
+	-- Inserta los valores por defecto en la solicitud de beca
+	INSERT INTO solicitudestudiante(cedula,fechaSolicitud,estadoSolicitud,tipoBeca)
+	VALUES(cedula,CURDATE(),'R',0);
+END; $$
+DELIMITER ;
 
 
 -- Ejemplo quemado de sp_crearRegistrosEstudiantePorMatricula
 /*
-CALL `sp_crearRegistrosEstudiantePorMatricula`(1,NULL,19,1,'Villegas','Carranza','Alex Daniel',85283060,'503990937'
+CALL `sp_crearRegistrosEstudiantePorMatricula`('clavee',1,NULL,19,1,'Villegas','Carranza','Alex Daniel',85283060,'503990937'
 ,'1994-08-13',12)
 */
 DROP PROCEDURE IF EXISTS sp_crearRegistrosEstudiantePorMatricula;
@@ -306,6 +317,7 @@ CREATE PROCEDURE sp_crearRegistrosEstudiantePorMatricula(IN clave VARCHAR(200),I
 			CALL sp_crearGrupofamiliarPorNuevaMatricula (telef,cedEst);
 			CALL sp_SET_MiembroFam_GrupoFamiliar(cedEst,cedEst);
 			CALL sp_crearLogEstudiante(cedEst,clave);
+			CALL sp_crearSolicitudEst(cedEst);
 		COMMIT;
 	END; $$
 DELIMITER ;
