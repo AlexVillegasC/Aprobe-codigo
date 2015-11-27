@@ -22,7 +22,7 @@
                   <li><a ng-href="#/gestionInfoEstudiante" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'">Estudiantes</a></li>
                   <li><a ng-href="#/" style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#ecf0f1'">Gestion de rutas</a></li>
                   <li><a  style="color: white;" onmouseover="this.style.color='#7f8c8d'" onmouseout="this.style.color='#7f8c8d'"> 
-                  <login-Directive ></login-Directive> </a></li>
+                  <log-Out></log-Out> </a></li>
               </ul>
             </div>        
         </div>      
@@ -36,13 +36,13 @@
     <form class="form-inline">
       <div class="form-group">
         <label class="sr-only" for="cedulaAP">Cedula</label>
-        <input type="text" class="form-control" id="cedulaAP" placeholder="Cedula">
+        <input type="text" class="form-control" id="cedulaAP" placeholder="Cedula" ng-model="search.cedula">
       </div>
           <div class="form-group">
             <label class="sr-only" for="1erApeAP">1er apellido</label>
-            <input type="text" class="form-control" id="1erApeAP" placeholder="1er apellido">
+            <input type="text" class="form-control" id="1erApeAP" placeholder="1er apellido" ng-model="search.primerApellido">
           </div>
-              <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+
 
           <br>
           <br>
@@ -77,10 +77,10 @@
       </tr> 
     </thead>
     <tbody>
-       <tr ng-repeat="estudiante in listaEst">
-          <td>{{estudiante.nombre}}</td>
+       <tr ng-repeat="estudiante in listaEst | filter:search">
           <td>{{estudiante.primerApellido}}</td>
           <td>{{estudiante.segundoApellido}}</td>
+          <td>{{estudiante.nombre}}</td>
           <td>{{estudiante.cedula}}</td>
           <td>{{estudiante.numNivel}}</td>
           <td>{{estudiante.tipoBeca}}</td>

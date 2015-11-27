@@ -292,14 +292,17 @@ CREATE TABLE logComiteBecas(
 )ENGINE=INNODB DEFAULT CHARSET=latin1;
 
 
+
+
 CREATE TABLE Bitacora(
-	codigo VARCHAR(20) NOT NULL PRIMARY KEY,
+	codigo INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	fecha DATE NOT NULL,
 	usuarioRealiza VARCHAR(10) NOT NULL,
 	cedulaUsuarioRealiza INT(12) NOT NULL,
-	justificacion VARCHAR(500)
+	justificacion VARCHAR(50) null
 	
 )ENGINE=INNODB DEFAULT CHARSET=latin1;
+
 
 
 CREATE TABLE Provincia(
@@ -322,17 +325,33 @@ CREATE TABLE Provincia(
 		FOREIGN KEY (`codCanton`) REFERENCES Canton (`codCanton`)
 	   )ENGINE=INNODB DEFAULT CHARSET=latin1;
 
-
-CREATE TABLE Cacerio(
-	nombre VARCHAR(30) NOT NULL,
-	codCacerio INT(11) NOT NULL PRIMARY KEY,
-	codDistrito INT(11) NOT NULL,
-	FOREIGN KEY (`codDistrito`) REFERENCES `Distrito`(`codDistrito`)
-  )ENGINE=INNODB DEFAULT CHARSET=latin1;
+	CREATE TABLE Cacerio(
+		nombre VARCHAR(30) NOT NULL,
+		codCacerio INT(11) NOT NULL PRIMARY KEY,
+		codDistrito INT(11) NOT NULL,
+		FOREIGN KEY (`codDistrito`) REFERENCES `Distrito`(`codDistrito`)
+	  )ENGINE=INNODB DEFAULT CHARSET=latin1;
   
+	DROP TABLE IF EXISTS TipoUsuario;
+	CREATE TABLE TipoUsuario(
+		IDUsuario INT AUTO_INCREMENT NOT NULL  PRIMARY KEY,
+		Nombre VARCHAR(20)  
+	)ENGINE=INNODB DEFAULT CHARSET=latin1; 
 
+	DROP TABLE IF EXISTS  TipoUsuario_Miembro;
+	CREATE TABLE TipoUsuario_Miembro(
+		IDUsuario INT NOT NULL,
+		Ced VARCHAR(20) NOT NULL,
+		KEY `TipoUsuario_MiembroFK`(`IDUsuario`),
+		KEY `Miembro_TipoUsuarioFK`(`Ced`),
+		CONSTRAINT `TipoUsuario_MiembroFK`  FOREIGN KEY(`IDUsuario`) REFERENCES `TipoUsuario`(`IDUsuario`) ON DELETE CASCADE ON UPDATE CASCADE,
+		CONSTRAINT `Miembro_TipoUsuarioFK`  FOREIGN KEY(`Ced`) REFERENCES `MiembrosFamilia`(`cedula`) ON DELETE CASCADE ON UPDATE CASCADE
+	)ENGINE=INNODB DEFAULT CHARSET=latin1; 
+	 
 
 /*Data*/
+
+
 
 /*Data for the table `tnacionalidad` */
 INSERT  INTO `nacionalidad`(`codNacionalidad`,`nomNacionalidad`) VALUES (1,'Costa Rica'),(2,'Canadá'),(3,'Estados Unidos'),(4,'México'),(5,'Belice'),(6,'Guatemala'),(7,'Honduras'),(8,'El Salvador'),(9,'Nicaragua'),(10,'Panamá'),(11,'Cuba'),(12,'Haití'),(13,'República Dominicana'),(14,'Otras Islas del Caribe'),(15,'Colombia'),(16,'Ecuador'),(17,'Perú'),(18,'Bolivia'),(19,'Chile'),(20,'Argentina'),(21,'Paraguay'),(22,'Uruguay'),(23,'Brasil'),(24,'Venezuela'),(25,'Guyana'),(26,'Europa'),(27,'Africa'),(28,'Asia'),(29,'Oceanía');
@@ -413,6 +432,13 @@ INSERT INTO estadoConyugal(`idEsdato`,`nomEstado`) VALUES (2,'casado/a');
 INSERT INTO estadoConyugal(`idEsdato`,`nomEstado`) VALUES (3,'unión libre');
 INSERT INTO estadoConyugal(`idEsdato`,`nomEstado`) VALUES (4,'viudo/a');
 INSERT INTO estadoConyugal(`idEsdato`,`nomEstado`) VALUES (5,'sepeparado/a');
+
+-- TipoUsuario 
+INSERT INTO `TipoUsuario`(`Nombre`) VALUES('Estudiante');
+INSERT INTO `TipoUsuario`(`Nombre`) VALUES('ComiteBecas');
+INSERT INTO `TipoUsuario`(`Nombre`) VALUES('Admin');
+
+
 
 
 /*SP*/

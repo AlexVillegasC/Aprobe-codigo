@@ -12,6 +12,11 @@ app.controller('loginAdminCtrl',['$scope','loginService',function ($scope,loginS
 	{
 		loginService.login($scope.Usuario,$scope);
 	}
+
+	$scope.cerrarSesion = function(){
+		loginService.logout();
+	}
+
 }]);
 
 

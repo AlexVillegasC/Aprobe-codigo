@@ -17,8 +17,8 @@
 		function crear_matriculaEst($clave,$sex,$becaE,$edadE,$codNacional,$ap1,$ap2,$nombre,$telef,
 			$cedEst,$fecha_n,$numNiv){
 			// Cuerpo de la función
-			$EncripClave = password_hash('1994-08-13', PASSWORD_BCRYPT);
-			$this->query = "CALL sp_crearRegistrosEstudiantePorMatricula('$clave',$sex,NULL,$edadE,$codNacional,
+			$EncripClave = password_hash($clave, PASSWORD_BCRYPT);
+			$this->query = "CALL sp_crearRegistrosEstudiantePorMatricula('$EncripClave',$sex,NULL,$edadE,$codNacional,
 			'$ap1','$ap2','$nombre',$telef,'$cedEst',$fecha_n,$numNiv)";
 		
 	//	$this->query = "CALL sp_crearMiembrosfamilia  ('$cedEst','$nombre','$ap1','ap2',$codNacional,$edadE,1,NULL,4,$sex);";
