@@ -4,15 +4,16 @@ app.directive('fileReader', function() {
       fileReader:"="
     },
     link: function(scope, element) {
+      //on element change
       $(element).on('change', function(changeEvent) {
         var files = changeEvent.target.files;
-        //console.log(files.length);
+        //console.log(changeEvent.target.files);
         
         if (files.length) {
           var r = new FileReader();
           r.onload = function(e) {
               var contents = e.target.result;
-              scope.$apply(function () {
+              scope.$apply(function() {
                 scope.fileReader = contents;
               });
               //console.log(scope.fileReader + ' in onload');
@@ -23,6 +24,7 @@ app.directive('fileReader', function() {
           //r.readAsText(files[0]);
         }
       });
+
     }
   };
 });

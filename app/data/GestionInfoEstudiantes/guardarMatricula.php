@@ -3,13 +3,13 @@
 	include('../dbAccess/CADusuario.php');
 	$cad = new CADusuario();
 
-	$file= json_decode(file_get_contents('php://input'),true);//get user from
-	$matricula = $file['file'];
+	$cliente= json_decode(file_get_contents('php://input'),true);//get user from
+	$matricula = $cliente['file'];
 	$listaEstudiantes = json_decode($matricula,true);
 
 	$n = count($listaEstudiantes['post']);
 	$resp = 0;
-	for($i = 0;  $i < 5; $i++){
+	for($i = 0;  $i < $n; $i++){
 		$estudiante = $listaEstudiantes['post'][$i];
 		//print_r($estudiante);
 		//print '<br>';

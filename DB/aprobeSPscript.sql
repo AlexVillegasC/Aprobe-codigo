@@ -286,13 +286,27 @@ BEGIN
 	VALUES(cedula,CURDATE(),'R',0);
 END; $$
 DELIMITER ;
+-------------------------------------Registra que el estudiante es de tipo usuario Estudiante
 
+DROP PROCEDURE IF EXISTS sp_agregarTipoUsuario_Miembro;
+DELIMITER $$
+
+
+CREATE PROCEDURE sp_agregarTipoUsuario_Miembro(IN ced VARCHAR(20), IN IDtipoUsuario INT(1))
+BEGIN
+	INSERT INTO `TipoUsuario_Miembro`(`IDUsuario`,`Ced`) VALUES(IDtipoUsuario,ced);
+			
+END; $$
+DELIMITER 
 
 -- Ejemplo quemado de sp_crearRegistrosEstudiantePorMatricula
 /*
 CALL `sp_crearRegistrosEstudiantePorMatricula`('clavee',1,NULL,19,1,'Villegas','Carranza','Alex Daniel',85283060,'503990937'
 ,'1994-08-13',12)
 */
+
+
+
 DROP PROCEDURE IF EXISTS sp_crearRegistrosEstudiantePorMatricula;
 
 DELIMITER $$
@@ -311,16 +325,89 @@ CREATE PROCEDURE sp_crearRegistrosEstudiantePorMatricula(IN clave VARCHAR(200),I
 		END;
 		
 		START TRANSACTION;
+			-- Si el estudiante esta en el sistema ACTUALIZAR ciertos datos de esos estudiantes
 			
-			CALL sp_crearEstudiante(cedEst,NULL,fecha_n,NULL,numNiv,NULL);
-			CALL sp_crearMiembrosfamilia  (cedEst,nombre,ap1,ap2,codNacional,edadE,1,becaE,4,sex);
-			CALL sp_crearGrupofamiliarPorNuevaMatricula (telef,cedEst);
-			CALL sp_SET_MiembroFam_GrupoFamiliar(cedEst,cedEst);
-			CALL sp_crearLogEstudiante(cedEst,clave);
-			CALL sp_crearSolicitudEst(cedEst);
+				-- Los demás estudiantes se borrarán del sistema, pues son estudiantes que no están matriculados.
+			-- Si no esta en el sistema ingresar todo desde cero.
+		
+
+			
+			SET @respuesta = 0;  -- declara variable
+			SELECT EXISTS        -- Si el estudiante esta en el sistema. guarda en la variable: 1-Si , 0-No
+			(SELECT `logestudiante`.`cedula`FROM `logestudiante` WHERE cedula = cedEst)
+			INTO @respuesta;
+			 
+			-- Si el estudiante existía en el sistema
+			IF (@respuesta=1)
+			THEN 
+				-- Actualizar estudiante
+				 UPDATE `miembrosfamilia`,`estudiantes`,`grupofamiliar`
+				 SET `primerApellido` = ap1,
+				 `segundoApellido`= ap2,
+				 `edad`= edadE,
+				 `becas`=becaE,
+				  `estudiantes`.`numNivel` = numNiv,
+				 `grupofamiliar`.`telefono` = telef		
+				 WHERE `miembrosfamilia`.`cedula` = cedEst
+				 AND    `estudiantes`.`cedula` = cedEst
+				 AND    `grupofamiliar`.`cedEstudiante` = cedEst;
+				 
+				
+			-- Si no existía insertelo al sistema 
+			ELSE
+				CALL sp_crearEstudiante(cedEst,NULL,fecha_n,NULL,numNiv,NULL);
+				CALL sp_crearMiembrosfamilia  (cedEst,nombre,ap1,ap2,codNacional,edadE,1,becaE,4,sex);
+				CALL sp_crearGrupofamiliarPorNuevaMatricula (telef,cedEst);
+				CALL sp_SET_MiembroFam_GrupoFamiliar(cedEst,cedEst);
+				CALL sp_crearLogEstudiante(cedEst,clave);
+				CALL sp_crearSolicitudEst(cedEst);
+				CALL sp_agregarTipoUsuario_Miembro(cedEst,1);
+			END IF; 
+			
+			
+
 		COMMIT;
 	END; $$
 DELIMITER ;
+
+
+--  Este procedimiento almacenado, debe cambiarsele de DAY  a YEAR el parametro para borrar matriculas desactualizadas
+--  Debe haber un Trigger que cada vez que borren registros de un estudiante, se copien a una tabla de respaldo de estudiantes.
+
+DROP PROCEDURE IF EXISTS borrarMatriculaDesactualizada_SP;
+
+DELIMITER $$
+CREATE PROCEDURE borrarMatriculaDesactualizada_SP()
+BEGIN
+
+			-- retornar los registros cuya fecha de matricula es vieja
+			SET @regViejo = 0;
+			SELECT EXISTS(
+			SELECT `solicitudestudiante`.`fechaSolicitud`
+			FROM `solicitudestudiante`
+			GROUP BY DAY(`fechaSolicitud`)
+			HAVING  DAY(`fechaSolicitud`) < DAY(CURDATE())
+			) INTO @regViejo;
+			
+			-- Si hay registros desactualizados de matriculas pasadas
+			IF(@regViejo=1)
+			THEN
+			    DELETE 
+			    FROM `solicitudestudiante` 
+			    WHERE `solicitudestudiante`.`fechaSolicitud` IN
+			    (		
+			        SELECT T1.`fecha` FROM (	
+				    (SELECT `solicitudestudiante`.`fechaSolicitud` AS 'fecha'
+				    FROM `solicitudestudiante`
+				    GROUP BY DAY(`fechaSolicitud`)
+				    HAVING  DAY(`fechaSolicitud`) < DAY(CURDATE())) T1
+				)
+			    );
+			END IF;
+END; $$
+DELIMITER ;
+
+
 /*
 CALL `sp_crearRegistrosEstudiantePorMatricula`(1,1,19,1,'villegas','carranza','alex',3235245,
 '9999','1999-10-28',12)

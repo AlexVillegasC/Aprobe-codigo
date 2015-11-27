@@ -120,13 +120,15 @@ VALUES ('',CURDATE(),USER(),'','Actualizo Log estudiante');
 END $$
 -------------------------------------------------------
 
+--  Borrar registros relacionados de un estudiante
 
-USE aprobe
-CREATE TABLE Bitacora(
-	codigo INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	fecha DATE NOT NULL,
-	usuarioRealiza VARCHAR(10) NOT NULL,
-	cedulaUsuarioRealiza INT(12) NOT NULL,
-	justificacion VARCHAR(500)
-	
-)ENGINE=INNODB DEFAULT CHARSET=latin1;
+DROP TRIGGER IF EXISTS TR_borrarRegistrosEstudianteFROMsolicitud;
+DELIMITER $$
+CREATE TRIGGER TR_borrarRegistrosEstudianteFROMsolicitud
+AFTER DELETE ON `solicitudestudiante` FOR EACH ROW
+BEGIN
+	DELETE FROM `miembrosfamilia` WHERE `miembrosfamilia`.`cedula` = OLD.`cedula`;
+	DELETE FROM `logestudiante` WHERE `logestudiante`.`cedula` = OLD.`cedula`;
+	DELETE FROM `grupofamiliar` WHERE `grupofamiliar`.`cedEstudiante` = OLD.`cedula`;
+	DELETE FROM `estudiantes` WHERE `estudiantes`.cedula =  OLD.`cedula`;
+END $$
