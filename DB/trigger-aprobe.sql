@@ -1,3 +1,4 @@
+/*
 DELIMITER $$
 CREATE TRIGGER Tr_Insertar_Estudiantes
 AFTER INSERT ON estudiantes FOR EACH ROW 
@@ -119,7 +120,7 @@ INSERT INTO bitacora (codigo,fecha,usuarioRealiza,cedulaUsuarioRealiza,justifica
 VALUES ('',CURDATE(),USER(),'','Actualizo Log estudiante');
 END $$
 -------------------------------------------------------
-
+*/
 --  Borrar registros relacionados de un estudiante
 
 DROP TRIGGER IF EXISTS TR_borrarRegistrosEstudianteFROMsolicitud;

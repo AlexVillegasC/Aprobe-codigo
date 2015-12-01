@@ -1,13 +1,6 @@
-app.controller('gestionInfoEstCtrl',['$scope','multipartForm','$location',function($scope,multipartForm,$location){
+app.controller('gestionInfoEstCtrl',['$scope','multipartForm',function($scope,multipartForm){
  
-	$scope.cliente = {};
-	$scope.Submit = function(){
-		alert("Espere por favor...");
-		multipartForm.post($scope.cliente);
-		alert("Listo!");
-		$location.path('/homeAdmin');
-	};
-
+	
 	//server response
 	$scope.response = {};
 	multipartForm.getData().then(function(promise){

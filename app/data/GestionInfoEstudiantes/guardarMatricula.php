@@ -9,7 +9,7 @@
 
 	$n = count($listaEstudiantes['post']);
 	$resp = 0;
-	for($i = 0;  $i < $n; $i++){
+	for($i = 0;  $i < 5; $i++){
 		$estudiante = $listaEstudiantes['post'][$i];
 		//print_r($estudiante);
 		//print '<br>';
@@ -28,9 +28,14 @@
 		$clave = $estudiante['fechaNac'];
 		$resp = $cad->crear_matriculaEst($clave,$sexo,$beca,$edad,$codigo,$ap1,$ap2,
 		$nombre,$telef,$cedula,$fechaNac,$numNiv);
-		print $resp;
+		//print $resp;
+
 
 	}
+	//registro de bitacora
+	session_start();
+	print $_SESSION['uid'];
+	$cad->registrarEnBitacora($_SESSION['uid'],'insercion de '.$n.' registros, se uso la funcion: crear_matriculaEst');
 	
 
  ?>

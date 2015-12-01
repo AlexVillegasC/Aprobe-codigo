@@ -220,17 +220,17 @@ CREATE TABLE escolaridad(
 )ENGINE=INNODB DEFAULT CHARSET=latin1;
 
 
-
+-- DEBE LLARMARSE  PERSONA
 CREATE TABLE MiembrosFamilia(
 		cedula VARCHAR(20) NOT NULL ,	
 		nombre VARCHAR(40) NOT NULL,
 		primerApellido VARCHAR(40) NOT NULL,
 		segundoApellido VARCHAR(40) NOT NULL,
 		codNacionalidad INT(11) NOT NULL,
-		edad INT(2) NOT NULL,
-		idParentesco INT(2) NOT NULL,
+		edad INT(2) null, -- NOT NULL,
+		idParentesco INT(2) null, -- NOT NULL,
 		becas  BOOLEAN DEFAULT NULL,
-		idEscolaridad INT(2) NOT NULL,
+		idEscolaridad INT(2) null, -- NOT NULL,
 		sexo INT(11) DEFAULT NULL,
 		PRIMARY KEY (cedula),
 		KEY `miembFam_nacionalidad_FK` (codNacionalidad),
@@ -291,18 +291,16 @@ CREATE TABLE logComiteBecas(
 	clave VARCHAR(200) NOT NULL
 )ENGINE=INNODB DEFAULT CHARSET=latin1;
 
-
-
-
+	
+DROP TABLE IF EXISTS Bitacora;	
 CREATE TABLE Bitacora(
 	codigo INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	fecha DATE NOT NULL,
-	usuarioRealiza VARCHAR(10) NOT NULL,
-	cedulaUsuarioRealiza INT(12) NOT NULL,
-	justificacion VARCHAR(50) null
+	fecha DATETIME NOT NULL,
+	usuarioRealiza VARCHAR(25) NOT NULL,
+	cedulaUsuarioRealiza VARCHAR(20) NOT NULL,
+	justificacion VARCHAR(200) NULL
 	
 )ENGINE=INNODB DEFAULT CHARSET=latin1;
-
 
 
 CREATE TABLE Provincia(
@@ -332,6 +330,7 @@ CREATE TABLE Provincia(
 		FOREIGN KEY (`codDistrito`) REFERENCES `Distrito`(`codDistrito`)
 	  )ENGINE=INNODB DEFAULT CHARSET=latin1;
   
+  -- DEBE LLAMARSE  PERFILES
 	DROP TABLE IF EXISTS TipoUsuario;
 	CREATE TABLE TipoUsuario(
 		IDUsuario INT AUTO_INCREMENT NOT NULL  PRIMARY KEY,
@@ -341,7 +340,7 @@ CREATE TABLE Provincia(
 	DROP TABLE IF EXISTS  TipoUsuario_Miembro;
 	CREATE TABLE TipoUsuario_Miembro(
 		IDUsuario INT NOT NULL,
-		Ced VARCHAR(20) NOT NULL,
+		Ced VARCHAR(20) NOT NULL primary key,
 		KEY `TipoUsuario_MiembroFK`(`IDUsuario`),
 		KEY `Miembro_TipoUsuarioFK`(`Ced`),
 		CONSTRAINT `TipoUsuario_MiembroFK`  FOREIGN KEY(`IDUsuario`) REFERENCES `TipoUsuario`(`IDUsuario`) ON DELETE CASCADE ON UPDATE CASCADE,

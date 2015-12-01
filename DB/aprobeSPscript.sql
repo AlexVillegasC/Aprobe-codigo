@@ -209,6 +209,61 @@ CREATE PROCEDURE sp_consultarPasswordAdmin(IN ced VARCHAR(20))
 	END; $$
 DELIMITER ;
 
+-- -- 
+DROP PROCEDURE IF EXISTS sp_consultarPasswordEst;
+
+DELIMITER $$
+CREATE PROCEDURE sp_consultarPasswordEst(IN ced VARCHAR(20))
+	BEGIN
+		SELECT `logestudiante`.`clave`
+		FROM `logestudiante`
+		WHERE `logestudiante`.`cedula` = ced;
+	END; $$
+DELIMITER ;
+
+-- --
+DROP PROCEDURE IF EXISTS sp_consultarPasswordComite;
+
+DELIMITER $$
+CREATE PROCEDURE sp_consultarPasswordComite(IN ced VARCHAR(20))
+	BEGIN
+		SELECT `logcomitebecas`.`clave`
+		FROM `logcomitebecas`
+		WHERE `logcomitebecas`.`cedula` = ced;
+	END; $$
+DELIMITER ;
+
+-- Pide el ID del usuario e identifica el tipo de usuario que sea, para despues buscarlo en la tabla de Log respectiva y retornar la clave encriptada
+
+DROP PROCEDURE IF EXISTS logUsuario;
+
+DELIMITER $$
+CREATE PROCEDURE logUsuario(IN cedula VARCHAR(20))
+BEGIN 
+	-- Identificar el tipo de usuario
+	SET @tipoUsuario = 0;
+	SELECT `calcular_tipo_usuario`(cedula) INTO @tipoUsuario;
+	
+	IF(@tipoUsuario = 1)
+	THEN
+		CALL sp_consultarPasswordEst(cedula);
+	ELSEIF(@tipoUsuario = 2)
+	THEN
+		CALL `sp_consultarPasswordComite`(cedula);
+	
+	ELSEIF(@tipoUsuario = 3)
+	THEN
+		CALL `sp_consultarPasswordAdmin`(cedula);
+		
+	ELSE SELECT 'El usuario no existe';
+	END IF;
+
+	
+	
+END; $$
+DELIMITER ;
+
+
 
 /*UPDATE*/
 DROP PROCEDURE IF EXISTS sp_actualizarMiembrosfamilia;
@@ -242,9 +297,9 @@ CREATE PROCEDURE sp_borrarMiembrosfamilia(IN ced VARCHAR(20) )
 	END; $$
 DELIMITER ;
 
-/*Grupo familiar CRUD*/
+-- Grupo familiar CRUD
 
-/*CREATE*/
+-- CREATE
 DROP PROCEDURE IF EXISTS sp_crearGrupofamiliarPorNuevaMatricula;
 
 DELIMITER $$
@@ -297,7 +352,7 @@ BEGIN
 	INSERT INTO `TipoUsuario_Miembro`(`IDUsuario`,`Ced`) VALUES(IDtipoUsuario,ced);
 			
 END; $$
-DELIMITER 
+DELIMITER ; 
 
 -- Ejemplo quemado de sp_crearRegistrosEstudiantePorMatricula
 /*
@@ -406,6 +461,18 @@ BEGIN
 			END IF;
 END; $$
 DELIMITER ;
+
+--  
+DROP PROCEDURE IF EXISTS sp_agregarBitacora;
+DELIMITER $$
+CREATE PROCEDURE sp_agregarBitacora(IN cedula VARCHAR(20), IN justificacion VARCHAR(100))
+BEGIN
+	INSERT INTO bitacora (fecha,usuarioRealiza,cedulaUsuarioRealiza,justificacion) 
+	VALUES (NOW(),USER(),cedula, justificacion);
+END; $$
+DELIMITER ;
+
+
 
 
 /*
