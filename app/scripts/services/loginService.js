@@ -5,7 +5,8 @@ app.factory('loginService',function($http,$location	,sessionService){
 			var promise = $http.post('data/Sesiones/user.php',data);
 			promise.then(function(msg){
 				var uid = msg.data;
-				if(uid.length > 10) 
+				//VALIDAR BIEN ESTE CASO
+				if(uid.length >= 9) 
 				{   //Success
 					console.log(uid);
 					sessionService.set('user',uid);//key and value are the user object and the unique ID

@@ -18,6 +18,10 @@ app.config(['$routeProvider', function($routeProvider) {
 		templateUrl: 'views/gestionInfoEstudiante.html',
 		controller: 'gestionInfoEstCtrl'
 	});
+	$routeProvider.when('/configuraciones',{
+		templateUrl: 'views/configuraciones.html',
+		controller: 'configCtrl'
+	});
 	$routeProvider.otherwise({redirectTo:'/home'});
 }]);
 

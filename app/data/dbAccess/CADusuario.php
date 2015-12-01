@@ -50,9 +50,9 @@
 
 
 		// Pide cedula y retorna el password
-		function log_admin($cedula){
+		function login($cedula){
 
-			$this->query = "CALL sp_consultarPasswordAdmin('$cedula')";
+			$this->query = "CALL logUsuario('$cedula')";
 			$this->result = mysqli_query($this->con,$this->query);
 
 			if($this->result === FALSE){
@@ -83,6 +83,19 @@
 				return json_encode($listaEstudiantes);
 			}
 		}
+
+		function registrarEnBitacora($cedula,$justificacion){
+			$this->query = "CALL sp_agregarBitacora('$cedula','$justificacion')";
+			$this->result = mysqli_query($this->con,$this->query);
+
+			if($this->result === FALSE){
+				trigger_error('Query failed returning error: '.mysql_error(),E_USER_ERROR);
+			}
+			else{
+				return true;
+			}
+		}
+
 
 	}
 
