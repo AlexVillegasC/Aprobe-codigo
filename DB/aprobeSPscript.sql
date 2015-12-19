@@ -385,7 +385,6 @@ CREATE PROCEDURE sp_crearRegistrosEstudiantePorMatricula(IN clave VARCHAR(200),I
 				-- Los demás estudiantes se borrarán del sistema, pues son estudiantes que no están matriculados.
 			-- Si no esta en el sistema ingresar todo desde cero.
 		
-
 			
 			SET @respuesta = 0;  -- declara variable
 			SELECT EXISTS        -- Si el estudiante esta en el sistema. guarda en la variable: 1-Si , 0-No
@@ -401,7 +400,7 @@ CREATE PROCEDURE sp_crearRegistrosEstudiantePorMatricula(IN clave VARCHAR(200),I
 				 `segundoApellido`= ap2,
 				 `edad`= edadE,
 				 `becas`=becaE,
-				  `estudiantes`.`numNivel` = numNiv,
+				 `estudiantes`.`numNivel` = numNiv,
 				 `grupofamiliar`.`telefono` = telef		
 				 WHERE `miembrosfamilia`.`cedula` = cedEst
 				 AND    `estudiantes`.`cedula` = cedEst

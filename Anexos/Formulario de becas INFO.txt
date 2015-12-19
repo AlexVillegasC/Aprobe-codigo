@@ -1,0 +1,96 @@
+Información que se debe extraer de un formulario de becas
+
+{} = los brakets encierran datos con los que ya se cuenta en el sistema
+
+
+-> Fecha actual
+1 -> Solicitante Estudiante
+{ 
+	Nombre, ap1, ap2,
+	sexo, 
+	Nacionalidad,
+	Cedula, Fecha de vencimiento o  expedición (Residentes extrangeros),
+	Edad, 
+	Fecha de nacimiento Dia Mes Año
+}
+
+2-> Datos del encargado
+Nombre, ap1, ap2,
+sexo, 
+Nacionalidad,
+Cedula, Fecha de vencimiento o  expedición (Residentes extrangeros)
+
+3-> Grupo familiar
+Provincia, Cantón, Distrito, Poblado,
+Distancia en kilometros del lugar de residencia del estudiantes al centro educativo,
+{Telefono},
+Email,
+Ayudas del estado (Beca fonabe, avancemos... (especificar monto)... Si es otra, explique... )
+
+Tipo de becas
+	{-> Transporte}
+	-> Comedor estudiantil
+
+
+4-> Miembros del grupo familiar
+
+Cedula,
+Nacionalidad (Values Costarricense),
+Nombre completo,
+Edad,
+Parentesco,
+Beca (si,no)
+Escolaridad (Dropdown),
+Ocupación, Ingreso Mensual
+
+OTROS INGRESO DEL GRUPO FAMILIAR
+Ayudas económicas de familiares, o particulares = monto
+pensión voluntaria = monto
+Ingresos por conceptos de alquileres = monto
+Ayudas en especio (especifique) = monto
+________________
+TOTAL DE INGRESOS
+
+
+5-> Acceso al centro educativo
+
+1. Existe transporte publico adecuado a los horarios del centro educativo  (SI,NO)
+2. El centro educativo en que esta matriculado es el más cercano a su residencia (SI,NO)
+	->Si en la pregunta 2 marco NO:
+		Nombre del centro educativo más cercano a su residencia,
+		A que distancia en kilometros esta ese centro educativo a su hogar,
+		A que distancia en kilometros esta el centro educativo en el que matriculo, a su  hogar
+
+
+Que medio de transport utiliza o utilizará para el traslado al centro educativo.
+(Dropdown or auto complete textbox)
+De esto:
+	Cual es el costo del pasaje diario,
+	Cual es el costo diario,
+	Explique
+
+6-> Pertenencia a grupos minoritarios
+
+Puede hablar algún dialecto: si o no
+Seleccione el dialecto:
+
+
+7-> Cualquier situación especial.
+Explicación de cualquier situación especial
+
+
+
+
+
+
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
+
+Datos del centro educativo en la ficha de solicitud de becas (Debe ser llenado por el centro educativo)
+{
+Nombre del centro educativo,
+Codigo,
+Dirección regional,
+Circuito
+}
+
