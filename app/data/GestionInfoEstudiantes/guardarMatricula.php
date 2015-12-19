@@ -16,7 +16,7 @@
 		$sexo = $estudiante['sexo'];
 		$beca = NULL;
 		$edad = $estudiante['edad'];
-		$codigo = $estudiante['codigo'];
+		$codigo = $estudiante['codigo'];  // nacionalidad
 		$ap1 = $estudiante['primerApellido'];
 		$ap2 = $estudiante['segundoApellido'];
 		$nombre = $estudiante['nombre'];

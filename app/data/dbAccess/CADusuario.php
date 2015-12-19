@@ -97,6 +97,26 @@
 		}
 
 
+		/*Get the kind of user that has an open  Session*/
+		function tipoSession($cedula){
+	
+			$this->query = "SELECT  calcular_tipo_usuario ('$cedula')";
+			$this->result = mysqli_query($this->con,$this->query);
+			$data;
+			if($this->result === FALSE){
+				trigger_error('Fallo, error en el Query '.mysql_error(),E_USER_ERROR);
+			}
+			else{
+				$row = mysqli_fetch_assoc($this->result);
+				foreach ($row as $i) {
+					return $i;
+				}
+
+			}
+
+		}
+
+
 	}
 
 ?>

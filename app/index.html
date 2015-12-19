@@ -28,12 +28,11 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div ng-view></div>
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-     <script src="https://code.angularjs.org/1.4.1/angular.js"></script>
-   <script src="https://code.angularjs.org/1.4.1/angular-route.min.js"></script>
+    <script src="https://code.angularjs.org/1.4.1/angular.js"></script>
+    <script src="https://code.angularjs.org/1.4.1/angular-route.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
    
     <!-- endbower -->
@@ -50,10 +49,15 @@
         <script src="./scripts/controllers/homeCtrl.js"></script>
         <script src="./scripts/controllers/gestionInfoEstudiantes.js"></script>
         <script src="./scripts/controllers/configCtrl.js"></script>
+        <script src="./scripts/controllers/FormBecasCtrl.js"></script>
         
         <script src="./scripts/services/multiPartForm.js"></script>
         <script src="./scripts/services/loginService.js"></script>
         <script src="./scripts/services/sessionService.js"></script>
         <!-- endbuild -->
+
+
+    <div ng-view></div>
+        
 </body>
 </html>
