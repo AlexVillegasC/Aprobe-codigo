@@ -38,7 +38,7 @@ Cedula,
 Nacionalidad (Values Costarricense),
 Nombre completo,
 Edad,
-Parentesco,
+Parentesco,u
 Beca (si,no)
 Escolaridad (Dropdown),
 Ocupación, Ingreso Mensual

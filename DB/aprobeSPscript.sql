@@ -474,6 +474,25 @@ DELIMITER ;
 
 
 
+
+--    SP que guarde un registro a la tabla recorrido
+
+DROP PROCEDURE IF  EXISTS sp_guardarRecorrido;
+DELIMITER $$
+
+
+CREATE PROCEDURE sp_guardarRecorrido (IN codReco INT)
+BEGIN
+	INSERT INTO `Recorrido` (`codRecorrido`) VALUES (codReco);
+
+END; $$
+DELIMITER ;
+
+
+
+
+
+
 /*
 CALL `sp_crearRegistrosEstudiantePorMatricula`(1,1,19,1,'villegas','carranza','alex',3235245,
 '9999','1999-10-28',12)
