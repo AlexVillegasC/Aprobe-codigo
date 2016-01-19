@@ -92,13 +92,28 @@ app.config(['$routeProvider', function($routeProvider) {
 			}
 		}
 	});
+	$routeProvider.when('/rutas/recorridos',{
+		templateUrl: 'views/recorridos.html',
+		controller: 'gestionRutasCTRL',
+		resolve: {
+			app: function($q,$timeout){
+				var defer = $q.defer();
+
+				$timeout(function(){
+					defer.resolve();
+				},100);
+				return defer.promise;
+			}
+		}
+	});
+
 	$routeProvider.otherwise({redirectTo:'/home'});
 }]);
 
 
 //Remove access to home page without autentication
 app.run(function($rootScope,$location,loginService,sessionService){
-	var routespermission=['/homeAdmin','/gestionInfoEstudiante']; //Route that require login
+	var routespermission=['/homeAdmin','/gestionInfoEstudiante','/rutas/recorridos']; //Route that require login
 	var routespermissionEstudiantes = ['/Becas'];
 
 	console.log("If there's coincidences with the routes: "+routespermission.indexOf($location.path()));

@@ -117,6 +117,45 @@
 		}
 
 
+		//Leer la lista de distritos y enviarla en formato JSON
+		function leerDistritos(){
+			$this->query = "SELECT nombre,codDistrito FROM distrito";
+			$this->result = mysqli_query($this->con,$this->query);
+			
+
+			if($this->result === false){
+				trigger_error('Fallo, error en el query'.mysql_error(),E_USER_ERROR);
+			}
+			else{
+				$lista = array();
+				while($row = mysqli_fetch_assoc($this->result)){
+					array_push($lista,$row);
+				}
+				return json_encode($lista);
+			}
+
+		}
+
+
+		//Leer la lista de cacerios, y enviarla en formato JSON
+		function leerCacerio(){
+			$this->query = "SELECT * FROM cacerio";
+			$this->result = mysqli_query($this->con,$this->query);
+
+			if($this->result === false) {
+				trigger_error('fallo, error en el query'.mysql_error(),E_USER_ERROR);
+			}
+			else{
+				$lista = array();
+				while($row = mysqli_fetch_assoc($this->result)){
+					array_push($lista,$row);
+				}
+				return json_encode($lista);
+			}
+
+
+		}
+
 	}
 
 ?>

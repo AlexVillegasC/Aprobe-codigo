@@ -7,7 +7,7 @@
 	$user= json_decode(file_get_contents('php://input'));//get user from
 	$admin = new CADusuario();//Clase de acceso a datos para usuarios Administradores
 
-   //$admin->crear_Admin($user->cedula,$user->clave);
+    //$admin->crear_Admin($user->cedula,$user->clave);
 
 
 	//Consulta password encriptado del admin con la Cedula
