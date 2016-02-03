@@ -113,8 +113,8 @@ app.config(['$routeProvider', function($routeProvider) {
 
 //Remove access to home page without autentication
 app.run(function($rootScope,$location,loginService,sessionService){
-	var routespermission=['/homeAdmin','/gestionInfoEstudiante','/rutas/recorridos']; //Route that require login
-	var routespermissionEstudiantes = ['/Becas'];
+	var routespermission=['/homeAdmin','/gestionInfoEstudiante','/rutas/recorridos']; //Route that require login: '/homeAdmin','/gestionInfoEstudiante','/rutas/recorridos'
+	var routespermissionEstudiantes = ['/Becas']; //  '/Becas'
 
 	console.log("If there's coincidences with the routes: "+routespermission.indexOf($location.path()));
 	console.log("Is logged?: "+loginService.islogged());

@@ -36,7 +36,7 @@
 		//inserta un administrador en la base de datos
 		function crear_Admin($ced,$pass){
 			$pass_hash =  password_hash($pass, PASSWORD_BCRYPT);//Encripta el password
-			$this->query = "INSERT into logadmin VALUES('$ced','$pass_hash')";
+			$this->query = "CALL sp_crearSA('$ced','$pass_hash')";
 			$this->result = mysqli_query($this->con,$this->query);
 
 			if($this->result === FALSE){
@@ -58,7 +58,6 @@
 			if($this->result === FALSE){
 				trigger_error('Query failed returning error: '.mysql_error(),E_USER_ERROR);
 			}else{
-
 				$clave = $this->result->fetch_assoc();
 				return $clave['clave'];//the ced column
 			}

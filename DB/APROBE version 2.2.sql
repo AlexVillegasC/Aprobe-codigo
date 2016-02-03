@@ -99,21 +99,20 @@ CREATE TABLE EmpresaTransp(
 )ENGINE=INNODB DEFAULT CHARSET=latin1;
 
 CREATE TABLE Recorrido(
-	  codRecorrido varchar(500) NOT NULL,
-	  nombre VARCHAR(20) NULL,	
-	  PRIMARY KEY (codRecorrido)
+	  idRecorrido INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	  codRecorrido VARCHAR(500) NOT NULL,
+	  nombre VARCHAR(20) NULL
 	)ENGINE=INNODB DEFAULT CHARSET=latin1;
-
 
 CREATE TABLE ruta(
    codRuta INT(11) NOT NULL,
    codTransporte INT(11) NOT NULL, 
-   codRecorrido INT (11) NOT NULL,
+   idRecorrido INT NOT NULL,
     PRIMARY KEY (codRuta),
     KEY `ruta_trasp_fk` (codTransporte),
-    KEY `ruta_recorrido_fk` (codRecorrido),
+    KEY `ruta_recorrido_fk` (idRecorrido),
    CONSTRAINT `ruta_trasp_fk` FOREIGN KEY (codTransporte) REFERENCES EmpresaTransp(codTransporte) ON DELETE CASCADE ON UPDATE CASCADE,
-   FOREIGN KEY `ruta_recorrido_fk`(codRecorrido) REFERENCES Recorrido(codRecorrido) ON DELETE CASCADE ON UPDATE CASCADE
+   CONSTRAINT`ruta_recorrido_fk`  FOREIGN KEY (idRecorrido) REFERENCES Recorrido(idRecorrido) ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE=INNODB DEFAULT CHARSET=latin1;
 
 
@@ -172,9 +171,6 @@ CREATE TABLE EstudianteCercaniaOtroCole(
 )ENGINE=INNODB DEFAULT CHARSET=latin1;
 
 
-
-
-
 CREATE TABLE medioTransporte(
 	nombre VARCHAR(20) NOT NULL,
 	costoDiario FLOAT NOT NULL,
@@ -221,24 +217,24 @@ CREATE TABLE escolaridad(
 
 
 -- DEBE LLARMARSE  PERSONA
-CREATE TABLE MiembrosFamilia(
+CREATE TABLE Persona(
 		cedula VARCHAR(20) NOT NULL ,	
 		nombre VARCHAR(40) NOT NULL,
 		primerApellido VARCHAR(40) NOT NULL,
 		segundoApellido VARCHAR(40) NOT NULL,
 		codNacionalidad INT(11) NOT NULL,
-		edad INT(2) null, -- NOT NULL,
-		idParentesco INT(2) null, -- NOT NULL,
+		edad INT(2) NULL, -- NOT NULL,
+		idParentesco INT(2) NULL, -- NOT NULL,
 		becas  BOOLEAN DEFAULT NULL,
-		idEscolaridad INT(2) null, -- NOT NULL,
+		idEscolaridad INT(2) NULL, -- NOT NULL,
 		sexo INT(11) DEFAULT NULL,
 		PRIMARY KEY (cedula),
-		KEY `miembFam_nacionalidad_FK` (codNacionalidad),
-		KEY `miembFam_Parentesco_FK` (idParentesco),
-		KEY `miembFam_Escolaridad_FK` (idEscolaridad),
-		CONSTRAINT `miembFam_nacionalidad_FK` FOREIGN KEY(`codNacionalidad`) REFERENCES nacionalidad(`codNacionalidad`)  ON DELETE CASCADE ON UPDATE CASCADE,
-		CONSTRAINT `miembFam_Parentesco_FK` FOREIGN KEY(`idParentesco`) REFERENCES parentesco(`idParentesco`)  ON DELETE CASCADE ON UPDATE CASCADE,
-		CONSTRAINT `miembFam_Escolaridad_FK` FOREIGN KEY(`idEscolaridad`) REFERENCES escolaridad(`idEscolaridad`)  ON DELETE CASCADE ON UPDATE CASCADE
+		KEY `Persona_nacionalidad_FK` (codNacionalidad),
+		KEY `Persona_Parentesco_FK` (idParentesco),
+		KEY `Persona_Escolaridad_FK` (idEscolaridad),
+		CONSTRAINT `Persona_nacionalidad_FK` FOREIGN KEY(`codNacionalidad`) REFERENCES nacionalidad(`codNacionalidad`)  ON DELETE CASCADE ON UPDATE CASCADE,
+		CONSTRAINT `Persona_Parentesco_FK` FOREIGN KEY(`idParentesco`) REFERENCES parentesco(`idParentesco`)  ON DELETE CASCADE ON UPDATE CASCADE,
+		CONSTRAINT `Persona_Escolaridad_FK` FOREIGN KEY(`idEscolaridad`) REFERENCES escolaridad(`idEscolaridad`)  ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE=INNODB DEFAULT CHARSET=latin1;
 
 CREATE TABLE becasMiembro(
@@ -247,8 +243,8 @@ CREATE TABLE becasMiembro(
 	cedula VARCHAR(20) NOT NULL ,	
 	explicacion VARCHAR(500),
 	PRIMARY KEY (cedula),
-	KEY `becasMiemb_mieb_FK` (cedula),
-	CONSTRAINT `becasMiemb_mieb_FK` FOREIGN KEY(`cedula`) REFERENCES MiembrosFamilia(`cedula`) ON DELETE CASCADE ON UPDATE CASCADE
+	KEY `becasMiemb_Persona_FK` (cedula),
+	CONSTRAINT `becasMiemb_Persona_FK` FOREIGN KEY(`cedula`) REFERENCES Persona(`cedula`) ON DELETE CASCADE ON UPDATE CASCADE
 	
 )ENGINE=INNODB DEFAULT CHARSET=latin1;
 
@@ -259,17 +255,17 @@ CREATE TABLE ingresosOcupacion(
 		ingresoMen DOUBLE NOT NULL,
 		PRIMARY KEY(cedula),
 		KEY `ingresOcu_miemb_FK`(cedula),
-		CONSTRAINT `ingresOcu_miemb_FK` FOREIGN KEY (`cedula`) REFERENCES `MiembrosFamilia`(`cedula`) ON DELETE CASCADE ON UPDATE CASCADE
+		CONSTRAINT `ingresOcu_Persona_FK` FOREIGN KEY (`cedula`) REFERENCES `Persona`(`cedula`) ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE=INNODB DEFAULT CHARSET=latin1;
 
 
-CREATE TABLE GrupoFamiliarMiembros(
+CREATE TABLE GrupoFamiliarPersona(
 		 idFamilia INT NOT NULL ,
 		 cedulaMiembro VARCHAR(20) NOT NULL,
 		 KEY `grupoF_iemb_fk`(idFamilia),
-		 KEY `grupoF_miembro_FK` (cedulaMiembro),
+		 KEY `grupoF_Persona_FK` (cedulaMiembro),
 		 CONSTRAINT `grupoF_iemb_fk` FOREIGN KEY (`idFamilia`) REFERENCES `Grupofamiliar`(`idFamilia`)  ON DELETE CASCADE ON UPDATE CASCADE,
-		 CONSTRAINT `grupoF_miembro_FK` FOREIGN KEY (`cedulaMiembro`) REFERENCES `MiembrosFamilia`(`cedula`)  ON DELETE CASCADE ON UPDATE CASCADE
+		 CONSTRAINT `grupoF_Persona_FK` FOREIGN KEY (`cedulaMiembro`) REFERENCES `Persona`(`cedula`)  ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE=INNODB DEFAULT CHARSET=latin1; 
 
 
@@ -331,20 +327,20 @@ CREATE TABLE Provincia(
 	  )ENGINE=INNODB DEFAULT CHARSET=latin1;
   
   -- DEBE LLAMARSE  PERFILES
-	DROP TABLE IF EXISTS TipoUsuario;
-	CREATE TABLE TipoUsuario(
+	DROP TABLE IF EXISTS PERFILES;
+	CREATE TABLE PERFILES(
 		IDUsuario INT AUTO_INCREMENT NOT NULL  PRIMARY KEY,
 		Nombre VARCHAR(20)  
 	)ENGINE=INNODB DEFAULT CHARSET=latin1; 
 
-	DROP TABLE IF EXISTS  TipoUsuario_Miembro;
-	CREATE TABLE TipoUsuario_Miembro(
+	DROP TABLE IF EXISTS  PERFILES_Persona;
+	CREATE TABLE PERFILES_Persona(
 		IDUsuario INT NOT NULL,
-		Ced VARCHAR(20) NOT NULL primary key,
+		Ced VARCHAR(20) NOT NULL PRIMARY KEY,
 		KEY `TipoUsuario_MiembroFK`(`IDUsuario`),
-		KEY `Miembro_TipoUsuarioFK`(`Ced`),
-		CONSTRAINT `TipoUsuario_MiembroFK`  FOREIGN KEY(`IDUsuario`) REFERENCES `TipoUsuario`(`IDUsuario`) ON DELETE CASCADE ON UPDATE CASCADE,
-		CONSTRAINT `Miembro_TipoUsuarioFK`  FOREIGN KEY(`Ced`) REFERENCES `MiembrosFamilia`(`cedula`) ON DELETE CASCADE ON UPDATE CASCADE
+		KEY `Persona_Perfil_FK`(`Ced`),
+		CONSTRAINT `TipoUsuario_MiembroFK`  FOREIGN KEY(`IDUsuario`) REFERENCES `PERFILES`(`IDUsuario`) ON DELETE CASCADE ON UPDATE CASCADE,
+		CONSTRAINT `Miembro_TipoUsuarioFK`  FOREIGN KEY(`Ced`) REFERENCES `Persona`(`cedula`) ON DELETE CASCADE ON UPDATE CASCADE
 	)ENGINE=INNODB DEFAULT CHARSET=latin1; 
 	 
 
@@ -356,7 +352,7 @@ CREATE TABLE Provincia(
 INSERT  INTO `nacionalidad`(`codNacionalidad`,`nomNacionalidad`) VALUES (1,'Costa Rica'),(2,'Canadá'),(3,'Estados Unidos'),(4,'México'),(5,'Belice'),(6,'Guatemala'),(7,'Honduras'),(8,'El Salvador'),(9,'Nicaragua'),(10,'Panamá'),(11,'Cuba'),(12,'Haití'),(13,'República Dominicana'),(14,'Otras Islas del Caribe'),(15,'Colombia'),(16,'Ecuador'),(17,'Perú'),(18,'Bolivia'),(19,'Chile'),(20,'Argentina'),(21,'Paraguay'),(22,'Uruguay'),(23,'Brasil'),(24,'Venezuela'),(25,'Guyana'),(26,'Europa'),(27,'Africa'),(28,'Asia'),(29,'Oceanía');
 
 /*Data for the table `tprovincia` */
--- INSERT  INTO `provincia`(`codProvincia`,`nombre`) VALUES (1,'San José'),(2,'Alajuela'),(3,'Cartago'),(4,'Heredia'),(5,'Guanacaste'),(6,'Puntarenas'),(7,'Limón');
+INSERT  INTO `provincia`(`codProvincia`,`nombre`) VALUES (1,'San José'),(2,'Alajuela'),(3,'Cartago'),(4,'Heredia'),(5,'Guanacaste'),(6,'Puntarenas'),(7,'Limón');
 
 /*Data for the table `tcanton` */
 -- INSERT  INTO `Canton`(`codCanton`,`nombre`,`codProvincia`) VALUES (101,'San José',1),(102,'Escazú',1),(103,'Desamparados',1),(104,'Puriscal',1),(105,'Tarrazú',1),(106,'Aserrí',1),(107,'Mora',1),(108,'Goicoechea',1),(109,'Santa Ana',1),(110,'Alajuelita',1),(111,'Vázquez de Coronado',1),(112,'Acosta',1),(113,'Tibás',1),(114,'Moravia',1),(115,'Montes de Oca',1),(116,'Turrubares',1),(117,'Dota',1),(118,'Curridabat',1),(119,'Pérez Zeledón',1),(120,'León Cortes',1),(201,'Alajuela',2),(202,'San Ramón',2),(203,'Grecia',2),(204,'San Mateo',2),(205,'Atenas',2),(206,'Naranjo',2),(207,'Palmares',2),(208,'Poás',2),(209,'Orotina',2),(210,'San Carlos',2),(211,'Alfaro Ruíz',2),(212,'Valverde Vega',2),(213,'Upala',2),(214,'Los Chiles',2),(215,'Guatuso',2),(301,'Cartago',3),(302,'Paraíso',3),(303,'La Unión',3),(304,'Jiménez',3),(305,'Turrialba',3),(306,'Alvarado',3),(307,'Oreamuno',3),(308,'Guarco',3),(401,'Heredia',4),(402,'Barba',4),(403,'Santo Domingo',4),(404,'Santa Bárbara',4),(405,'San Rafael',4),(406,'San Isidro',4),(407,'Belén',4),(408,'Flores',4),(409,'San Pablo',4),(410,'Sarapiquí',4),(501,'Liberia',5),(502,'Nicoya',5),(503,'Santa Cruz',5),(504,'Bagaces',5),(505,'Carrillo',5),(506,'Cañas',5),(507,'Abangares',5),(508,'Tilarán',5),(509,'Nandayure',5),(510,'La Cruz',5),(511,'Hojancha',5),(601,'Puntarenas',6),(602,'Esparza',6),(603,'Buenos Aires',6),(604,'Montes de Oro',6),(605,'Osa',6),(606,'Aguirre',6),(607,'Golfito',6),(608,'Coto Brus',6),(609,'Parrita',6),(610,'Corredores',6),(611,'Garabito',6),(701,'Limón',7),(702,'Pococí',7),(703,'Siquirres',7),(704,'Talamanca',7),(705,'Matina',7),(706,'Guácimo',7);
@@ -453,9 +449,9 @@ INSERT INTO estadoConyugal(`idEsdato`,`nomEstado`) VALUES (4,'viudo/a');
 INSERT INTO estadoConyugal(`idEsdato`,`nomEstado`) VALUES (5,'sepeparado/a');
 
 -- TipoUsuario 
-INSERT INTO `TipoUsuario`(`Nombre`) VALUES('Estudiante');
-INSERT INTO `TipoUsuario`(`Nombre`) VALUES('ComiteBecas');
-INSERT INTO `TipoUsuario`(`Nombre`) VALUES('Admin');
+INSERT INTO `PERFILES`(`Nombre`) VALUES('Estudiante');
+INSERT INTO `PERFILES`(`Nombre`) VALUES('ComiteBecas');
+INSERT INTO `PERFILES`(`Nombre`) VALUES('Admin');
 
 
 
