@@ -30,6 +30,8 @@
       </div>  
     </div>
 
+
+
 <div class="text-center">
 <h1><label>Gestion de recorridos del CTP NANDAYURE</label></h1>
 </div>
@@ -39,81 +41,140 @@
 <div class="container-fluid text-center">
     <div class="row content">
 
+
         <div class="col-sm-9   text-left">
             <h1>Gestion de recorridos del CTP NANDAYURE</h1>
             <h2>Puedes crear un nuevo recorrido para las rutas</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco labo</p>
             <hr>
-            <h2><label class="label label-info">Crear recorrido</label></h2>
-            <p>Selecciona los puntos de parada:</p>
+            <h2 class=""><label class="">Crear recorrido</label></h2>
+            <p>Selecciona los puntos de parada del bus:</p>
 
-         <button type="button" class="btn btn-success"  ng-click="guardarRecorrido(auxDistrito,auxCacerio)" >Guardar <span class="badge">{{numPuntos}}</span></button>
+           
 
-        <button type="button" class="btn btn-danger" ng-click="borrarRecorrido()">Borrar</button>
 
-        <button type="button" class="btn btn-primary">Guardar en registros</button>
+            <div class="col-sm-9   text-left">
+            
 
-<div class="col-xs-8" >
-        <div class="btn-group">
-              <div class="dropdown">
-                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-click="desplegarDistritos()">
-                    Distrito: 
-                      {{auxDistrito.nombre}}
-                      <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                      <li ng-repeat="distrito in listDistritos">
-                        <a ng-click="desplegarCacerios(distrito)" ng-model="codDistrito">{{distrito.nombre}}</a>
-                      </li>
-                  </ul>
-          </div>
-</div>
-          <div class="btn-group">
-            <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
-                      Cacerios: 
-                      {{auxCacerio.nombre}}
-                      <span class="caret">, </span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li ng-repeat="cacerio in listaCacerios | filter:codDistrito">
-                          <a ng-click="establecerPunto(cacerio)" >{{cacerio.nombre}}</a>
-                        </li>
-                    </ul>
-                </div>
-          </div>
-          </div>
-          <br>
-          <br>
-          <hr>
-            <h2 ><label class="label label-danger">Borrar recorrido</label></h2>
-            <p>Selecciona el recorrido por su nombre:</p>
+               <button type="button" class="btn btn-success"  ng-click="guardarRecorrido(auxDistrito,auxCacerio)" >Seleccionar <span class="badge">{{numPuntos}}</span></button>
+
+             
+
+                        <div class="btn-group">
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-click="desplegarDistritos()">
+                                  Distrito: 
+                                    {{auxDistrito.nombre}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li ng-repeat="distrito in listDistritos">
+                                      <a ng-click="desplegarCacerios(distrito)" ng-model="codDistrito">{{distrito.nombre}}</a>
+                                    </li>
+                                </ul>
+                        </div>
+                      </div>
+                        <div class="btn-group">
+                          <div class="dropdown">
+                                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
+                                    Cacerios: 
+                                    {{auxCacerio.nombre}}
+                                    <span class="caret">, </span>
+                                  </button>
+                                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                      <li ng-repeat="cacerio in listaCacerios | filter:codDistrito">
+                                        <a ng-click="establecerPunto(cacerio)" >{{cacerio.nombre}}</a>
+                                      </li>
+                                  </ul>
+                              </div>
+                        </div>  
+
+                          <br>
+                          <br>
+                          <hr>
+                          <h2><label>Consultar recorridos</label></h2>
+                         <p>Selecciona el recorrido por su nombre:</p> 
+                          <button type="button" class="btn btn-success"  ng-click="guardarRecorrido(auxDistrito,auxCacerio)" >Visualizar</button>  
+                           <button type="button" class="btn btn-danger"  ng-click="guardarRecorrido(auxDistrito,auxCacerio)" >Eliminar</button>  
+                          <div class="btn-group">
+                            <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownRecorridos" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
+                                      Recorridos: 
+                                      {{recorrido.nombre}}
+                                      <span class="caret">, </span>
+                                    </button>
+
+                                    <!--
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                        <li ng-repeat="">
+                                          <a ng-click="" >{{recorrido.nombre}}</a>
+                                        </li>
+                                    </ul>
+                                    -->
+                            </div>
+                          </div>          
+            </div> 
         </div>
-
-<!--
-    
--->
 
         <!--SIDEBAR-->
-        <div class="col-xs-6 col-sm-3">
-            <div class="col-sm-12 sidenav">
-                <div class="well">
-                    <h2><label class="text-danger">Panel de vizualizaci&oacute;n</label></h2>
-                </div>
-                <div class="well">
-                         <span ng-repeat ="nombrePorLugar in nombresRecorrido track by $index">
-                            <label class="labelbox">
-                              <h2><span class="text-info">{{nombrePorLugar}}</span></h2>
-                            </label>
-                        </span>
-                </div>
-            </div>
+          <br><br>
+          <div class="col-xs-6 col-sm-3">
+              <div class="col-sm-12 sidenav">
+                  <div class="well">
+                      <h2><label class="text-danger">Panel de vizualizaci&oacute;n</label></h2>
+                  </div>
+                  <div class="well">
+                      <!-- Trigger the modal with a button -->
+                 <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Guardar</button>
+                    <h2 ><button type="button" class="label label-danger btn-lg" ng-click="borrarRecorrido()">Restablecer</button></h2>
+
+                           <span ng-repeat ="nombrePorLugar in nombresRecorrido track by $index">
+                              <label class="labelbox">
+                                <h3><span class="text-info">{{nombrePorLugar}}</span></h3>
+                              </label>
+                              <br>
+                          </span>
+                  </div>
+
+              </div>
+          </div>
+        <!--SIDEBAR-->
+
+
+
+
+      
+    </div><!--ROW-->
+
+</div><!--container-fluid text-center-->
+
+
+<!--MODAL-->
+
+<div class="container">
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
         </div>
-        <!--END SIDEBAR-->
-
+        <div class="modal-body">
+          <p>Some text in the modal.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
     </div>
-
+  </div>
+  
 </div>
 
-
-
+</body>
+</html>

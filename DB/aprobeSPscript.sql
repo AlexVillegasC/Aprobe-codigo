@@ -1,4 +1,24 @@
 
+DROP FUNCTION IF EXISTS calcular_tipo_usuario;
+
+DELIMITER $$
+CREATE  FUNCTION  calcular_tipo_usuario(cedula VARCHAR(20))
+RETURNS INT
+BEGIN
+	
+	SET @res = '';
+	SELECT t1.IDUsuario FROM (
+	(SELECT `perfiles_persona`.`IDUsuario`
+	FROM `perfiles_persona`
+	WHERE `perfiles_persona`.`Ced` = cedula) t1
+	)
+	INTO @res;
+	-- select @res;
+	RETURN @res;
+END; 
+$$
+DELIMITER ;
+
 /*SP*/
 
 
@@ -14,11 +34,20 @@ DROP PROCEDURE IF EXISTS ActualizarAdmin_sp;
 
 DELIMITER $$
 CREATE PROCEDURE ActualizarAdmin_sp(IN ced VARCHAR(20), IN clav VARCHAR(200))
-	BEGIN
+BEGIN
+    DECLARE `_rollback` BOOL DEFAULT 0;
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+    START TRANSACTION;
 		UPDATE `logadmin`
 		SET logadmin.`clave` = clav
 		WHERE logadmin.`cedula` = ced;
-	END; $$
+    IF `_rollback` THEN
+	ROLLBACK;
+	SELECT 'problem ActualizarAdmin_sp';
+    ELSE
+	COMMIT;
+    END IF;
+END; $$
 DELIMITER ;
 
 
@@ -30,9 +59,20 @@ DROP PROCEDURE IF EXISTS CrearComiteBecas_sp;
 DELIMITER $$
 
 CREATE PROCEDURE CrearComiteBecas_sp(IN ced VARCHAR(20),IN clav VARCHAR(200))
-	BEGIN 
+BEGIN   
+    DECLARE `_rollback` BOOL DEFAULT 0;
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+    START TRANSACTION;
+
 	   INSERT INTO logcomitebecas (`cedula`,`clave`) VALUES(ced,clav);  
-	END; $$
+
+    IF `_rollback` THEN
+	ROLLBACK;
+	SELECT 'problem CrearComiteBecas_sp';
+    ELSE
+	COMMIT;
+    END IF;
+END; $$
 DELIMITER ;
 
 /*actualizar contraseña comiteBecas*/
@@ -41,8 +81,17 @@ DROP PROCEDURE IF EXISTS ActualizarComiteBecas;
 DELIMITER $$
 CREATE PROCEDURE ActualizarComiteBecas(IN ced VARCHAR(20), IN clav VARCHAR(200))
 	BEGIN
+	    DECLARE `_rollback` BOOL DEFAULT 0;
+	    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+	    START TRANSACTION;
 		UPDATE logestudiante
 		SET logestudiante.`clave` = clav;
+	    IF `_rollback` THEN
+		ROLLBACK;
+	        SELECT 'problem ActualizarComiteBecas';
+	    ELSE
+		COMMIT;
+	    END IF;
 	END; $$
 DELIMITER ;
 
@@ -59,26 +108,44 @@ DROP PROCEDURE IF EXISTS sp_crearLogEstudiante;
 DELIMITER $$
 CREATE PROCEDURE sp_crearLogEstudiante(IN ced VARCHAR(20), IN pass VARCHAR(200))
 	BEGIN
+	    DECLARE `_rollback` BOOL DEFAULT 0;
+	    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+	    START TRANSACTION;
 		INSERT INTO logestudiante (logestudiante.`cedula`,logestudiante.`clave`)
 		SELECT * FROM (SELECT ced,pass) AS tmp
 		WHERE NOT EXISTS 
 		(SELECT logestudiante.cedula 
 		 FROM logestudiante
 		 WHERE logestudiante.cedula = ced);
+	    IF `_rollback` THEN
+		ROLLBACK;
+	        SELECT 'problem sp_crearLogEstudiante';
+	    ELSE
+		COMMIT;
+	    END IF;
 	END; $$
 DELIMITER ;
 
 
 /*Actualiza la clase de un registro en la tabla log estudiante*/
 
-
 DROP PROCEDURE IF EXISTS sp_actualizarLogEstudiante;
 
 DELIMITER $$
 CREATE PROCEDURE sp_actualizarLogEstudiante(IN ced VARCHAR(20), IN pass VARCHAR(200))
 	BEGIN
+	    DECLARE `_rollback` BOOL DEFAULT 0;
+	    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+	    START TRANSACTION;
 		UPDATE logestudiante 
 		SET logestudiante.`cedula` = ced, logestudiante.`clave` = pass;
+	    IF `_rollback` THEN
+		ROLLBACK;
+		SELECT 'problem sp_actualizarLogEstudiante';
+	    ELSE
+		COMMIT;
+	    END IF;
+		
 	END; $$
 DELIMITER ;
 
@@ -91,7 +158,11 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS sp_crearEstudiante;
 DELIMITER $$
 CREATE PROCEDURE sp_crearEstudiante(IN ced VARCHAR(20), IN  fecha_exp DATETIME, IN fecha_nac DATETIME, IN nomDialec VARCHAR(40), IN numNiv INT(11), IN idGmino INT(11) )
+	
 	BEGIN
+	    DECLARE `_rollback` BOOL DEFAULT 0;
+	    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+	    START TRANSACTION;
 		INSERT INTO `estudiantes` 
 		(estudiantes.`cedula`,
 		 estudiantes.`fecha_expedicion`,
@@ -100,6 +171,13 @@ CREATE PROCEDURE sp_crearEstudiante(IN ced VARCHAR(20), IN  fecha_exp DATETIME, 
 		 estudiantes.`numNivel`,
 		 estudiantes.`idGrupoMinoritario`)
 		 VALUES (ced,fecha_exp,fecha_nac,nomDialec,numNiv,idGmino);
+		 
+	    IF `_rollback` THEN
+		ROLLBACK;
+		SELECT 'problem sp_crearEstudiante';
+	    ELSE
+		COMMIT;
+	    END IF;
 	END; $$
 DELIMITER ;
 
@@ -112,6 +190,9 @@ DROP PROCEDURE IF EXISTS sp_actualizarEstudiante;
 DELIMITER $$
 CREATE PROCEDURE sp_actualizarEstudiante(IN ced VARCHAR(20), IN  fecha_exp DATETIME, IN fecha_nac DATETIME, IN nomDialec VARCHAR(40), IN numNiv INT(11) )
 	BEGIN
+	 DECLARE `_rollback` BOOL DEFAULT 0;
+	    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+	    START TRANSACTION;
 		UPDATE estudiantes
 		SET 
 		 estudiantes.`cedula` = ced,
@@ -119,6 +200,12 @@ CREATE PROCEDURE sp_actualizarEstudiante(IN ced VARCHAR(20), IN  fecha_exp DATET
 		 estudiantes.`fecha_nac` = fecha_nac,
 		 estudiantes.`nomDialecto` = nomDialec,
 		 estudiantes.`numNivel` = numNiv;
+	    IF `_rollback` THEN
+		ROLLBACK;
+		SELECT 'problem sp_actualizarEstudiante';
+	    ELSE
+		COMMIT;
+	    END IF;
 	END; $$
 DELIMITER ;
 
@@ -140,6 +227,9 @@ DROP PROCEDURE IF EXISTS sp_borrarEstudiante;
 DELIMITER $$
 CREATE PROCEDURE sp_borrarEstudiante(IN ced VARCHAR(20))
 	BEGIN
+            DECLARE `_rollback` BOOL DEFAULT 0;
+	    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+	    START TRANSACTION;
 		DELETE 
 		FROM estudiantes
 		WHERE estudiantes.`cedula` = `ced`;
@@ -147,8 +237,14 @@ CREATE PROCEDURE sp_borrarEstudiante(IN ced VARCHAR(20))
 		FROM `logestudiante`
 		WHERE   logestudiante.`cedula` = ced;
 		DELETE
-		FROM `miembrosfamilia`
-		WHERE  `miembrosfamilia`.`cedula` = ced;
+		FROM `Persona`
+		WHERE  `Persona`.`cedula` = ced;
+	    IF `_rollback` THEN
+		ROLLBACK;
+		SELECT 'problem sp_actualizarEstudiante';
+	    ELSE
+		COMMIT;
+	    END IF;
 	END; $$
 DELIMITER ;
 
@@ -162,7 +258,7 @@ CREATE PROCEDURE sp_borrarTODOSEstudiante()
 		DELETE
 		FROM `logestudiante`;
 		DELETE
-		FROM `miembrosfamilia`;
+		FROM `Persona`;
 	END; $$
 DELIMITER ;
 
@@ -176,23 +272,32 @@ DELIMITER ;
 
 
 
-DROP PROCEDURE IF EXISTS sp_crearMiembrosfamilia;
+DROP PROCEDURE IF EXISTS sp_crearPersona;
 
 DELIMITER $$
-CREATE PROCEDURE sp_crearMiembrosfamilia(IN ced VARCHAR(20),IN nom VARCHAR (40), IN ap1 VARCHAR(40), IN ap2 VARCHAR(40),IN codNaciona INT (11),IN edadE INT (2) ,IN idParent INT(2), IN becasE BOOLEAN, IN idEscolarid INT (2), IN sex  INT (11)  )
+CREATE PROCEDURE sp_crearPersona(IN ced VARCHAR(20),IN nom VARCHAR (40), IN ap1 VARCHAR(40), IN ap2 VARCHAR(40),IN codNaciona INT (11),IN edadE INT (2) ,IN idParent INT(2), IN becasE BOOLEAN, IN idEscolarid INT (2), IN sex  INT (11)  )
 	BEGIN
-		INSERT INTO `miembrosfamilia`
-		(miembrosfamilia.`cedula`,
-		 miembrosfamilia.`nombre`,
-		 miembrosfamilia.`primerApellido`,
-		 miembrosfamilia.`segundoApellido`,
-		 miembrosfamilia.`codNacionalidad`,
-		 miembrosfamilia.`edad`,
-		 miembrosfamilia.`idParentesco`,
-		 miembrosfamilia.`becas`,
-		 miembrosfamilia.`idEscolaridad`,
-		 `MiembrosFamilia`.`sexo`)
+	    DECLARE `_rollback` BOOL DEFAULT 0;
+	    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+	    START TRANSACTION;
+		INSERT INTO `Persona`
+		(Persona.`cedula`,
+		 Persona.`nombre`,
+		 Persona.`primerApellido`,
+		 Persona.`segundoApellido`,
+		 Persona.`codNacionalidad`,
+		 Persona.`edad`,
+		 Persona.`idParentesco`,
+		 Persona.`becas`,
+		 Persona.`idEscolaridad`,
+		 `Persona`.`sexo`)
 		 VALUES (ced,nom,ap1,ap2,codNaciona,edadE,idParent,becasE,idEscolarid,sex);
+	    IF `_rollback` THEN
+		ROLLBACK;
+		SELECT 'problem sp_actualizarEstudiante';
+	    ELSE
+		COMMIT;
+	    END IF;
 	END; $$
 DELIMITER ;
 
@@ -203,9 +308,18 @@ DROP PROCEDURE IF EXISTS sp_consultarPasswordAdmin;
 DELIMITER $$
 CREATE PROCEDURE sp_consultarPasswordAdmin(IN ced VARCHAR(20))
 	BEGIN
+	    DECLARE `_rollback` BOOL DEFAULT 0;
+	    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+	    START TRANSACTION;
 		SELECT `logadmin`.`clave`
 		FROM `logadmin`
 		WHERE `logadmin`.`cedula` = ced;
+	   IF `_rollback` THEN
+		ROLLBACK;
+		SELECT 'problem sp_consultarPasswordAdmin';
+	    ELSE
+		COMMIT;
+	    END IF;
 	END; $$
 DELIMITER ;
 
@@ -215,9 +329,18 @@ DROP PROCEDURE IF EXISTS sp_consultarPasswordEst;
 DELIMITER $$
 CREATE PROCEDURE sp_consultarPasswordEst(IN ced VARCHAR(20))
 	BEGIN
+	    DECLARE `_rollback` BOOL DEFAULT 0;
+	    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+	    START TRANSACTION;
 		SELECT `logestudiante`.`clave`
 		FROM `logestudiante`
 		WHERE `logestudiante`.`cedula` = ced;
+	   IF `_rollback` THEN
+		ROLLBACK;
+		SELECT 'problem sp_consultarPasswordAdmin';
+	    ELSE
+		COMMIT;
+	    END IF;
 	END; $$
 DELIMITER ;
 
@@ -227,9 +350,18 @@ DROP PROCEDURE IF EXISTS sp_consultarPasswordComite;
 DELIMITER $$
 CREATE PROCEDURE sp_consultarPasswordComite(IN ced VARCHAR(20))
 	BEGIN
+	    DECLARE `_rollback` BOOL DEFAULT 0;
+	    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+	    START TRANSACTION;
 		SELECT `logcomitebecas`.`clave`
 		FROM `logcomitebecas`
 		WHERE `logcomitebecas`.`cedula` = ced;
+	   IF `_rollback` THEN
+		ROLLBACK;
+		SELECT 'problem sp_consultarPasswordComite';
+	    ELSE
+		COMMIT;
+	    END IF;
 	END; $$
 DELIMITER ;
 
@@ -240,6 +372,9 @@ DROP PROCEDURE IF EXISTS logUsuario;
 DELIMITER $$
 CREATE PROCEDURE logUsuario(IN cedula VARCHAR(20))
 BEGIN 
+    DECLARE `_rollback` BOOL DEFAULT 0;
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+    START TRANSACTION;
 	-- Identificar el tipo de usuario
 	SET @tipoUsuario = 0;
 	SELECT `calcular_tipo_usuario`(cedula) INTO @tipoUsuario;
@@ -255,9 +390,14 @@ BEGIN
 	THEN
 		CALL `sp_consultarPasswordAdmin`(cedula);
 		
-	ELSE SELECT 'El usuario no existe';
+	ELSE SELECT 'El usuario no existe' AS 'clave';
 	END IF;
-
+   IF `_rollback` THEN
+	ROLLBACK;
+	SELECT 'problem logUsuario';
+    ELSE
+	COMMIT;
+    END IF;
 	
 	
 END; $$
@@ -266,34 +406,43 @@ DELIMITER ;
 
 
 /*UPDATE*/
-DROP PROCEDURE IF EXISTS sp_actualizarMiembrosfamilia;
+DROP PROCEDURE IF EXISTS sp_actualizarPersona;
 
 DELIMITER $$
-CREATE PROCEDURE sp_actualizarMiembrosfamilia(IN ced VARCHAR(20),IN nom VARCHAR (40), IN ap1 VARCHAR(40), IN ap2 VARCHAR(40),IN codNaciona INT (11),IN edadE INT (2) ,IN idParent INT(2), IN becasE BOOLEAN, IN idEscolarid INT (2)  )
+CREATE PROCEDURE sp_actualizarPersona(IN ced VARCHAR(20),IN nom VARCHAR (40), IN ap1 VARCHAR(40), IN ap2 VARCHAR(40),IN codNaciona INT (11),IN edadE INT (2) ,IN idParent INT(2), IN becasE BOOLEAN, IN idEscolarid INT (2)  )
 	BEGIN
-		UPDATE miembrosfamilia
+	   DECLARE `_rollback` BOOL DEFAULT 0;
+	    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+	    START TRANSACTION;
+		UPDATE Persona
 		SET 
-		 miembrosfamilia.`cedula` = ced,
-		 miembrosfamilia.`nombre` = nom,
-		 miembrosfamilia.`primerApellido` = ap1,
-		 miembrosfamilia.`segundoApellido`= ap2,
-		 miembrosfamilia.`codNacionalidad`= codNaciona,
-		 miembrosfamilia.`edad`   = edadE,
-		 miembrosfamilia.`idParentesco`   = idParent,  
-		 miembrosfamilia.`becas`  = becasE,
-		 miembrosfamilia.`idEscolaridad` = idEscolarid;
+		 Persona.`cedula` = ced,
+		 Persona.`nombre` = nom,
+		 Persona.`primerApellido` = ap1,
+		 Persona.`segundoApellido`= ap2,
+		 Persona.`codNacionalidad`= codNaciona,
+		 Persona.`edad`   = edadE,
+		 Persona.`idParentesco`   = idParent,  
+		 Persona.`becas`  = becasE,
+		 Persona.`idEscolaridad` = idEscolarid;
+	    IF `_rollback` THEN
+		ROLLBACK;
+		SELECT 'problem sp_actualizarPersona';
+	    ELSE
+		COMMIT;
+	    END IF;
 	END; $$
 DELIMITER ;
 
 /*DELETE*/
 
-DROP PROCEDURE IF EXISTS sp_borrarMiembrosfamilia;
+DROP PROCEDURE IF EXISTS sp_borrarPersona;
 
 DELIMITER $$
-CREATE PROCEDURE sp_borrarMiembrosfamilia(IN ced VARCHAR(20) )
+CREATE PROCEDURE sp_borrarPersona(IN ced VARCHAR(20) )
 	BEGIN
-		DELETE  FROM miembrosfamilia
-		WHERE miembrosfamilia.`cedula` = ced;
+		DELETE  FROM Persona
+		WHERE Persona.`cedula` = ced;
 	END; $$
 DELIMITER ;
 
@@ -305,12 +454,21 @@ DROP PROCEDURE IF EXISTS sp_crearGrupofamiliarPorNuevaMatricula;
 DELIMITER $$
 CREATE PROCEDURE sp_crearGrupofamiliarPorNuevaMatricula(IN telef INT(11), IN cedEst VARCHAR(20))
 	BEGIN
+	    DECLARE `_rollback` BOOL DEFAULT 0;
+	    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+	    START TRANSACTION;
 		   INSERT INTO grupofamiliar (telefono,cedEstudiante) 
 		   SELECT * FROM (SELECT telef,cedEst) AS tmp
 		   WHERE NOT EXISTS 
 		   (SELECT GrupoFamiliar.`cedEstudiante` 
 		    FROM GrupoFamiliar 
 		    WHERE cedEstudiante = cedEst);
+	    IF `_rollback` THEN
+		ROLLBACK;
+		SELECT 'problem sp_crearGrupofamiliarPorNuevaMatricula';
+	    ELSE
+		COMMIT;
+	    END IF;
 	END; $$
 DELIMITER ;
 
@@ -324,7 +482,7 @@ DROP PROCEDURE IF EXISTS sp_SET_MiembroFam_GrupoFamiliar;
 DELIMITER $$
 CREATE PROCEDURE sp_SET_MiembroFam_GrupoFamiliar(IN cedEst VARCHAR(20),IN cedMiembro VARCHAR(20))
 	BEGIN
-		   INSERT INTO `grupofamiliarmiembros` (`idFamilia`,`cedulaMiembro`) 
+		   INSERT INTO `GrupoFamiliarPersona` (`idFamilia`,`cedulaMiembro`) 
 		   SELECT `grupofamiliar`.`idFamilia`,cedMiembro FROM `grupofamiliar`
 		   WHERE `grupofamiliar`.`cedEstudiante` = cedEst;
 	END; $$
@@ -332,6 +490,7 @@ DELIMITER ;
 
 -- Inserta la solicitud de beca del estudiante, que va por defecto recien entra la lista de matricula
 DROP PROCEDURE IF EXISTS sp_crearSolicitudEst;
+
 DELIMITER $$
 
 CREATE PROCEDURE sp_crearSolicitudEst(IN cedula VARCHAR(20))
@@ -395,14 +554,14 @@ CREATE PROCEDURE sp_crearRegistrosEstudiantePorMatricula(IN clave VARCHAR(200),I
 			IF (@respuesta=1)
 			THEN 
 				-- Actualizar estudiante
-				 UPDATE `miembrosfamilia`,`estudiantes`,`grupofamiliar`
+				 UPDATE `Persona`,`estudiantes`,`grupofamiliar`
 				 SET `primerApellido` = ap1,
 				 `segundoApellido`= ap2,
 				 `edad`= edadE,
 				 `becas`=becaE,
 				 `estudiantes`.`numNivel` = numNiv,
 				 `grupofamiliar`.`telefono` = telef		
-				 WHERE `miembrosfamilia`.`cedula` = cedEst
+				 WHERE `Persona`.`cedula` = cedEst
 				 AND    `estudiantes`.`cedula` = cedEst
 				 AND    `grupofamiliar`.`cedEstudiante` = cedEst;
 				 
@@ -410,7 +569,7 @@ CREATE PROCEDURE sp_crearRegistrosEstudiantePorMatricula(IN clave VARCHAR(200),I
 			-- Si no existía insertelo al sistema 
 			ELSE
 				CALL sp_crearEstudiante(cedEst,NULL,fecha_n,NULL,numNiv,NULL);
-				CALL sp_crearMiembrosfamilia  (cedEst,nombre,ap1,ap2,codNacional,edadE,1,becaE,4,sex);
+				CALL sp_crearPersona  (cedEst,nombre,ap1,ap2,codNacional,edadE,1,becaE,4,sex);
 				CALL sp_crearGrupofamiliarPorNuevaMatricula (telef,cedEst);
 				CALL sp_SET_MiembroFam_GrupoFamiliar(cedEst,cedEst);
 				CALL sp_crearLogEstudiante(cedEst,clave);
@@ -508,7 +667,7 @@ DROP PROCEDURE IF EXISTS sp_actualizarMatriculado;
 DELIMITER $$
 CREATE PROCEDURE sp_actualizarMatriculado(IN sex INT(11),IN IDescolaridad INT(2),IN becaE TINYINT(1),IN edadE INT(2),IN codNacional INT (11) ,IN ap1 VARCHAR(40),IN ap2 VARCHAR(40),IN nombre VARCHAR (40),IN idParent INT(11),IN telef INT(11), IN cedEst VARCHAR(20),IN fecha_n DATETIME, IN numNiv INT (11) )
 	BEGIN  
-		UPDATE miembrosfamilia.
+		UPDATE Persona.
 	END; $$
 DELIMITER ;
 */
@@ -527,7 +686,7 @@ VALUES (1,'SOLICITANTE');
 INSERT INTO escolaridad (idEscolaridad,nomEscolaridad)
 VALUES (5,'Educacion media');
 
-INSERT INTO MiembrosFamilia(cedula,
+INSERT INTO Persona(cedula,
 			    nombre,
 			    primerApellido,
 			    segundoApellido,
@@ -546,3 +705,31 @@ VALUES ('503990937','Alex Daniel','Villegas','Carranza',1,21,1,FALSE,5):
     FROM GrupoFamiliar 
     WHERE cedEstudiante = '503990937');
 */
+
+
+
+--  TEMPORAL SP that Allow to create a SUPER USER IN THE APP
+
+
+DROP PROCEDURE IF EXISTS sp_crearSA;
+
+DELIMITER $$
+CREATE PROCEDURE sp_crearSA(IN ced VARCHAR(20), IN pass VARCHAR(500))
+BEGIN
+	INSERT INTO Persona(cedula,
+				    nombre,
+				    primerApellido,
+				    segundoApellido,
+				    codNacionalidad,
+				    edad,
+				    idParentesco,
+				    becas,
+				    idEscolaridad)
+	VALUES (ced,'SA','SA','SA',1,21,1,FALSE,5);
+
+	INSERT INTO `PERFILES_Persona` VALUES (3,ced);
+
+	INSERT INTO logadmin VALUES(ced,pass);
+
+END; $$
+DELIMITER ;
